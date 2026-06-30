@@ -1,6 +1,6 @@
 # Research Notes
 
-The templates are based on current practical status UI guidance, with emphasis on clarity over decoration.
+The ledger template is based on current practical status UI guidance, with emphasis on clarity over decoration.
 
 ## Applied Principles
 
@@ -17,4 +17,3 @@ The templates are based on current practical status UI guidance, with emphasis o
 - WCAG guidance on not using color as the only visual means of communicating information: https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html
 - Nielsen Norman Group on visibility of system status: https://www.nngroup.com/articles/visibility-system-status/
 - Nielsen Norman Group on progress indicators and communicating wait or process state: https://www.nngroup.com/articles/progress-indicators/
-

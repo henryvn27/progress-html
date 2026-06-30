@@ -13,6 +13,8 @@ When `/goal` runs in a repo with `progress.html`, update the page beside the nor
 | `orca unify` runs | update `Readiness score` slice |
 | handoff written | mark `Handoff` as `done` and link `.orca/handoffs/<goal>.md` |
 
+When a loop starts, record `data-estimate-min`. When it finishes, record `data-actual-min`. Leave both values in the row so the learning log can improve future estimates.
+
 ## Prompt Addition
 
 ```text
@@ -27,5 +29,6 @@ State: done
 Owner: goal-runner
 Next action: Hand off or start the next bounded goal.
 Verification: `.orca/state.env` has `readiness_score`, handoff path is present.
+Estimate: `45m`
+Actual: `62m` when done
 ```
-

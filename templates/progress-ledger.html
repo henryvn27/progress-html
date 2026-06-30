@@ -12,10 +12,18 @@
       --muted: #66645e;
       --line: #d7d1c4;
       --panel: #ffffff;
+      --queued: #5f6570;
       --active: #0f5f63;
       --waiting: #8a5a00;
       --blocked: #9b2f2f;
+      --verifying: #5a3f92;
       --done: #345b32;
+      --queued-bg: #eef0f2;
+      --active-bg: #e4f0f0;
+      --waiting-bg: #f5ecd7;
+      --blocked-bg: #f7e3e1;
+      --verifying-bg: #eee7f7;
+      --done-bg: #e7f0e5;
     }
 
     * { box-sizing: border-box; }
@@ -51,19 +59,45 @@
       margin: 0;
     }
 
-    .summary {
+    .summary, .status-key {
       display: grid;
-      grid-template-columns: minmax(0, 1.8fr) repeat(3, minmax(120px, .6fr));
       gap: 1px;
       background: var(--line);
       border: 1px solid var(--line);
+    }
+
+    .summary {
+      grid-template-columns: minmax(0, 1.8fr) repeat(3, minmax(120px, .6fr));
       margin: 22px 0;
     }
 
-    .summary > div {
+    .summary > div, .status-key > div {
       background: var(--panel);
       padding: 14px 16px;
+    }
+
+    .summary > div {
       min-height: 76px;
+    }
+
+    .status-key {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      margin: 0 0 22px;
+    }
+
+    .status-key > div {
+      border-top: 4px solid var(--state);
+      background: var(--state-bg);
+    }
+
+    .status-key strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .status-key span {
+      color: var(--muted);
+      font-size: 13px;
     }
 
     .next-action {
@@ -136,8 +170,28 @@
     .progress-fill {
       display: block;
       height: 100%;
-      width: 50%;
+      width: 33%;
       background: var(--active);
+    }
+
+    .time-panel {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+      margin: -8px 0 22px;
+    }
+
+    .time-panel > div {
+      background: var(--panel);
+      padding: 14px 16px;
+    }
+
+    .time-panel strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1.15;
     }
 
     .log {
@@ -196,6 +250,7 @@
       border-collapse: collapse;
       background: var(--panel);
       border: 1px solid var(--line);
+      margin-bottom: 22px;
     }
 
     th, td {
@@ -213,26 +268,42 @@
       background: #efebe1;
     }
 
+    tbody tr {
+      border-left: 6px solid var(--state);
+      background: var(--state-bg);
+    }
+
+    tbody tr td {
+      background: color-mix(in srgb, var(--state-bg) 62%, var(--panel));
+    }
+
     tr:last-child td { border-bottom: 0; }
     tr.is-muted { display: none; }
-    tr.is-focused td { background: #f2efe7; }
+    tr.is-focused td {
+      background: color-mix(in srgb, var(--state-bg) 82%, var(--panel));
+      box-shadow: inset 0 0 0 1px var(--state);
+    }
 
     .state {
       display: inline-flex;
-      min-width: 82px;
+      min-width: 98px;
       justify-content: center;
-      border: 1px solid currentColor;
-      padding: 2px 8px;
+      border: 1px solid var(--state);
+      background: var(--state);
+      color: #fff;
+      padding: 4px 9px;
       font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .06em;
     }
 
-    .active { color: var(--active); }
-    .waiting { color: var(--waiting); }
-    .blocked { color: var(--blocked); }
-    .done { color: var(--done); }
+    [data-state="queued"], .queued { --state: var(--queued); --state-bg: var(--queued-bg); }
+    [data-state="active"], .active { --state: var(--active); --state-bg: var(--active-bg); }
+    [data-state="waiting"], .waiting { --state: var(--waiting); --state-bg: var(--waiting-bg); }
+    [data-state="blocked"], .blocked { --state: var(--blocked); --state-bg: var(--blocked-bg); }
+    [data-state="verifying"], .verifying { --state: var(--verifying); --state-bg: var(--verifying-bg); }
+    [data-state="done"], .done { --state: var(--done); --state-bg: var(--done-bg); }
 
     code {
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -248,7 +319,7 @@
 
     @media (max-width: 760px) {
       main { padding: 22px 14px 36px; }
-      .summary { grid-template-columns: 1fr; }
+      .summary, .status-key, .time-panel { grid-template-columns: 1fr; }
       .next-action { grid-template-columns: 1fr; }
       table, thead, tbody, tr, th, td { display: block; }
       thead { display: none; }
@@ -289,17 +360,45 @@
       </div>
       <div>
         <span class="label">Done</span>
-        <span class="value">3 of 6</span>
+        <span class="value">2 of 6</span>
       </div>
+    </section>
+
+    <section class="status-key" aria-label="Status color key">
+      <div data-state="queued"><strong>Queued</strong><span>Not started.</span></div>
+      <div data-state="active"><strong>Active</strong><span>Being worked now.</span></div>
+      <div data-state="waiting"><strong>Waiting</strong><span>Needs user or external input.</span></div>
+      <div data-state="blocked"><strong>Blocked</strong><span>Cannot move without unblock.</span></div>
+      <div data-state="verifying"><strong>Verifying</strong><span>Built, under proof.</span></div>
+      <div data-state="done"><strong>Done</strong><span>Complete with evidence.</span></div>
     </section>
 
     <section class="progress-meter" aria-labelledby="progress-label">
       <header>
         <span class="label" id="progress-label">Overall progress</span>
-        <strong>3 of 6 slices done</strong>
+        <strong>2 of 6 slices done</strong>
       </header>
-      <div class="progress-track" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="Overall progress: 50 percent">
+      <div class="progress-track" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100" aria-label="Overall progress: 33 percent">
         <span class="progress-fill"></span>
+      </div>
+    </section>
+
+    <section class="time-panel" aria-label="Time estimate summary">
+      <div>
+        <span class="label">Time remaining</span>
+        <strong data-time-remaining>Calculating</strong>
+      </div>
+      <div>
+        <span class="label">Original open estimate</span>
+        <strong data-time-original>Calculating</strong>
+      </div>
+      <div>
+        <span class="label">Learned multiplier</span>
+        <strong data-time-multiplier>Calculating</strong>
+      </div>
+      <div>
+        <span class="label">Completed sample</span>
+        <strong data-time-sample>Calculating</strong>
       </div>
     </section>
 
@@ -323,9 +422,11 @@
     <h2 class="table-title">Slice Ledger</h2>
     <div class="toolbar" aria-label="Ledger controls">
       <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="queued">Queued</button>
       <button type="button" data-filter="active">Active</button>
       <button type="button" data-filter="waiting">Waiting</button>
       <button type="button" data-filter="blocked">Blocked</button>
+      <button type="button" data-filter="verifying">Verifying</button>
       <button type="button" data-filter="done">Done</button>
       <button type="button" data-copy-summary>Copy summary</button>
       <span class="copied" data-copy-state aria-live="polite"></span>
@@ -337,52 +438,97 @@
           <th scope="col">State</th>
           <th scope="col">Owner</th>
           <th scope="col">Updated</th>
+          <th scope="col">Estimate</th>
+          <th scope="col">Actual</th>
           <th scope="col">Next action</th>
           <th scope="col">Verification</th>
         </tr>
       </thead>
       <tbody>
-        <tr tabindex="0" data-state="done">
+        <tr tabindex="0" data-state="done" data-estimate-min="45" data-actual-min="38">
           <td data-label="Slice">Inventory existing skills</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Updated"><time datetime="2026-06-30T13:05:00-04:00">2026-06-30 13:05 ET</time></td>
+          <td data-label="Estimate">45m</td>
+          <td data-label="Actual">38m</td>
           <td data-label="Next action">None.</td>
           <td data-label="Verification">List saved in <code>catalog/tools</code>.</td>
         </tr>
-        <tr tabindex="0" data-state="done">
+        <tr tabindex="0" data-state="done" data-estimate-min="60" data-actual-min="72">
           <td data-label="Slice">Create standalone repo</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Updated"><time datetime="2026-06-30T13:42:00-04:00">2026-06-30 13:42 ET</time></td>
+          <td data-label="Estimate">60m</td>
+          <td data-label="Actual">72m</td>
           <td data-label="Next action">Push remote.</td>
-          <td data-label="Verification">README, templates, and verifier present.</td>
+          <td data-label="Verification">README, ledger template, and verifier present.</td>
         </tr>
-        <tr tabindex="0" data-state="active">
+        <tr tabindex="0" data-state="queued" data-estimate-min="25">
+          <td data-label="Slice">Docs refresh</td>
+          <td data-label="State"><span class="state queued">queued</span></td>
+          <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T12:50:00-04:00">2026-06-30 12:50 ET</time></td>
+          <td data-label="Estimate">25m</td>
+          <td data-label="Actual">-</td>
+          <td data-label="Next action">Update install instructions after the template is approved.</td>
+          <td data-label="Verification">Not started.</td>
+        </tr>
+        <tr tabindex="0" data-state="active" data-estimate-min="40">
           <td data-label="Slice">Catalog wiring</td>
           <td data-label="State"><span class="state active">active</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Updated"><time datetime="2026-06-30T14:15:00-04:00">2026-06-30 14:15 ET</time></td>
+          <td data-label="Estimate">40m</td>
+          <td data-label="Actual">-</td>
           <td data-label="Next action">Add JSON entry and run manager validation.</td>
           <td data-label="Verification">Pending <code>./bin/orca tools</code>.</td>
         </tr>
-        <tr tabindex="0" data-state="waiting">
+        <tr tabindex="0" data-state="waiting" data-estimate-min="15">
           <td data-label="Slice">User review</td>
           <td data-label="State"><span class="state waiting">waiting</span></td>
           <td data-label="Owner">user</td>
           <td data-label="Updated"><time datetime="2026-06-30T14:00:00-04:00">2026-06-30 14:00 ET</time></td>
+          <td data-label="Estimate">15m</td>
+          <td data-label="Actual">-</td>
           <td data-label="Next action">Choose preferred template direction.</td>
           <td data-label="Verification">Feedback captured in issue tracker.</td>
         </tr>
-        <tr tabindex="0" data-state="blocked">
+        <tr tabindex="0" data-state="blocked" data-estimate-min="30">
           <td data-label="Slice">Publish release</td>
           <td data-label="State"><span class="state blocked">blocked</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Updated"><time datetime="2026-06-30T14:12:00-04:00">2026-06-30 14:12 ET</time></td>
+          <td data-label="Estimate">30m</td>
+          <td data-label="Actual">-</td>
           <td data-label="Next action">Wait for repo creation permission if GitHub rejects create.</td>
           <td data-label="Verification">Remote URL reachable.</td>
         </tr>
+        <tr tabindex="0" data-state="verifying" data-estimate-min="20">
+          <td data-label="Slice">Template proof</td>
+          <td data-label="State"><span class="state verifying">verifying</span></td>
+          <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T14:20:00-04:00">2026-06-30 14:20 ET</time></td>
+          <td data-label="Estimate">20m</td>
+          <td data-label="Actual">-</td>
+          <td data-label="Next action">Run the verifier and inspect the generated page.</td>
+          <td data-label="Verification">Pending browser check.</td>
+        </tr>
       </tbody>
+    </table>
+
+    <h2 class="table-title">Estimate Learning Log</h2>
+    <table aria-label="Estimate learning log">
+      <thead>
+        <tr>
+          <th scope="col">Completed slice</th>
+          <th scope="col">Estimated</th>
+          <th scope="col">Actual</th>
+          <th scope="col">Accuracy</th>
+        </tr>
+      </thead>
+      <tbody data-estimate-log></tbody>
     </table>
   </main>
   <script>
@@ -392,6 +538,54 @@
       const copyButton = document.querySelector("[data-copy-summary]");
       const copyState = document.querySelector("[data-copy-state]");
       const jumpNext = document.querySelector("[data-jump-next]");
+      const timeRemaining = document.querySelector("[data-time-remaining]");
+      const timeOriginal = document.querySelector("[data-time-original]");
+      const timeMultiplier = document.querySelector("[data-time-multiplier]");
+      const timeSample = document.querySelector("[data-time-sample]");
+      const estimateLog = document.querySelector("[data-estimate-log]");
+      const minutes = (value) => Number.parseFloat(value || "0") || 0;
+      const escapeHtml = (value) => value.replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+      const formatDuration = (mins) => {
+        const rounded = Math.round(mins);
+        if (rounded < 60) return `${rounded}m`;
+        const hours = Math.floor(rounded / 60);
+        const rest = rounded % 60;
+        return rest ? `${hours}h ${rest}m` : `${hours}h`;
+      };
+      const estimateRows = () => rows.map((row) => ({
+        row,
+        name: row.querySelector("td")?.innerText.trim() || "Untitled",
+        state: row.dataset.state,
+        estimate: minutes(row.dataset.estimateMin),
+        actual: minutes(row.dataset.actualMin)
+      }));
+      const updateEstimates = () => {
+        const items = estimateRows();
+        const completed = items.filter((item) => item.estimate > 0 && item.actual > 0);
+        const multiplier = completed.length
+          ? completed.reduce((sum, item) => sum + item.actual / item.estimate, 0) / completed.length
+          : 1;
+        const open = items.filter((item) => item.state !== "done" && item.state !== "blocked");
+        const originalOpen = open.reduce((sum, item) => sum + item.estimate, 0);
+        const learnedOpen = originalOpen * multiplier;
+        const blocked = items.filter((item) => item.state === "blocked" && item.estimate > 0);
+
+        timeRemaining.textContent = `${formatDuration(learnedOpen)}${blocked.length ? " + blocked" : ""}`;
+        timeOriginal.textContent = formatDuration(originalOpen);
+        timeMultiplier.textContent = `${multiplier.toFixed(2)}x`;
+        timeSample.textContent = `${completed.length} finished`;
+        estimateLog.innerHTML = completed.map((item) => {
+          const ratio = item.actual / item.estimate;
+          const label = ratio <= 1 ? "under" : "over";
+          return `<tr><td>${escapeHtml(item.name)}</td><td>${formatDuration(item.estimate)}</td><td>${formatDuration(item.actual)}</td><td>${ratio.toFixed(2)}x ${label}</td></tr>`;
+        }).join("") || `<tr><td colspan="4">No completed estimates yet. Add <code>data-estimate-min</code> when a slice starts and <code>data-actual-min</code> when it finishes.</td></tr>`;
+      };
       const copyText = async (text) => {
         if (navigator.clipboard) {
           try {
@@ -433,12 +627,14 @@
         const visible = rows.filter((row) => !row.classList.contains("is-muted"));
         const text = visible.map((row) => {
           const cells = [...row.querySelectorAll("td")].map((cell) => cell.innerText.trim().replace(/\s+/g, " "));
-          return `${cells[0]}: ${cells[1]} | updated: ${cells[3]} | next: ${cells[4]} | verification: ${cells[5]}`;
+          return `${cells[0]}: ${cells[1]} | updated: ${cells[3]} | estimate: ${cells[4]} | actual: ${cells[5]} | next: ${cells[6]} | verification: ${cells[7]}`;
         }).join("\n");
         await copyText(text);
         copyState.textContent = "Copied";
         setTimeout(() => { copyState.textContent = ""; }, 1800);
       });
+
+      updateEstimates();
     })();
   </script>
 </body>
