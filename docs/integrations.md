@@ -156,3 +156,4 @@ Add this to another tool's instructions:
 If `progress.html` exists in the target repo, update it at each lifecycle checkpoint. Keep it user-visible: current slice, state, next action, blocker if any, and verification evidence. Do not install hooks or start a watcher.
 ```
 
+For bulk installation across tool repos, use [../prompts/install-progress-html.md](../prompts/install-progress-html.md).

@@ -48,6 +48,7 @@ end
   docs/research.md
   examples/goal-runner.md
   examples/tool-wiring.md
+  prompts/install-progress-html.md
   skills/progress-html/SKILL.md
   orca-tool.json
 ].each do |relative|

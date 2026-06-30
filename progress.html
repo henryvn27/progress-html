@@ -136,7 +136,7 @@
     .progress-fill {
       display: block;
       height: 100%;
-      width: 57%;
+      width: 75%;
       background: var(--active);
     }
 
@@ -270,18 +270,18 @@
   <main>
     <header>
       <h1>progress.html</h1>
-      <p class="meta">Project: Progress HTML tool | Last updated: 2026-06-30 11:58 ET</p>
+      <p class="meta">Project: Progress HTML tool | Last updated: 2026-06-30 12:03 ET</p>
       <p class="note">Visible status for the standalone Progress HTML repo. Update this file when slices change state.</p>
     </header>
 
     <section class="summary" aria-label="Current progress summary">
       <div>
         <span class="label">Current goal</span>
-        <span class="value">Add a real root progress.html for this tool repo.</span>
+        <span class="value">Add an install prompt for applying Progress HTML across tool repos.</span>
       </div>
       <div>
         <span class="label">Active slice</span>
-        <span class="value">Create root tracker</span>
+        <span class="value">Install prompt</span>
       </div>
       <div>
         <span class="label">Open blockers</span>
@@ -289,16 +289,16 @@
       </div>
       <div>
         <span class="label">Done</span>
-        <span class="value">4 of 7</span>
+        <span class="value">6 of 8</span>
       </div>
     </section>
 
     <section class="progress-meter" aria-labelledby="progress-label">
       <header>
         <span class="label" id="progress-label">Overall progress</span>
-        <strong>4 of 7 slices done</strong>
+        <strong>6 of 8 slices done</strong>
       </header>
-      <div class="progress-track" role="progressbar" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" aria-label="Overall progress: 57 percent">
+      <div class="progress-track" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="Overall progress: 75 percent">
         <span class="progress-fill"></span>
       </div>
     </section>
@@ -306,7 +306,7 @@
     <section class="next-action" aria-labelledby="do-next">
       <div>
         <h2 id="do-next">Do next</h2>
-        <p>Verify the new root tracker, then merge it into main.</p>
+        <p>Verify the install prompt, then merge it into main.</p>
         <small>Owner: agent | Evidence expected: <code>ruby scripts/verify.rb</code> passes and PR merges.</small>
       </div>
       <button type="button" data-jump-next>Show active slice</button>
@@ -315,6 +315,7 @@
     <section class="log" aria-labelledby="latest-update">
       <h2 id="latest-update">Latest update</h2>
       <ol>
+        <li><strong>12:03</strong> Added an install prompt for Codex or Claude Code to apply Progress HTML across tool repos.</li>
         <li><strong>11:58</strong> Created root <code>progress.html</code> from the ledger template and rewrote it for this repo.</li>
         <li><strong>11:55</strong> Added the prominent <strong>Do next</strong> section to all shipped templates.</li>
         <li><strong>11:49</strong> Added integration recipes for goal runner, GitHub flow, QA, Notion, orchestration, and learning sidecar.</li>
@@ -370,18 +371,32 @@
           <td data-label="Next action">Refresh the template tab and review the Do next block.</td>
           <td data-label="Verification">Merged in PR #3.</td>
         </tr>
-        <tr tabindex="0" data-state="active">
+        <tr tabindex="0" data-state="done">
           <td data-label="Slice">Create root tracker</td>
+          <td data-label="State"><span class="state done">done</span></td>
+          <td data-label="Owner">agent</td>
+          <td data-label="Next action">Keep it updated during future repo work.</td>
+          <td data-label="Verification">Merged in PR #4.</td>
+        </tr>
+        <tr tabindex="0" data-state="done">
+          <td data-label="Slice">Progress bars</td>
+          <td data-label="State"><span class="state done">done</span></td>
+          <td data-label="Owner">agent</td>
+          <td data-label="Next action">None.</td>
+          <td data-label="Verification">Merged in PR #5.</td>
+        </tr>
+        <tr tabindex="0" data-state="active">
+          <td data-label="Slice">Install prompt</td>
           <td data-label="State"><span class="state active">active</span></td>
           <td data-label="Owner">agent</td>
-          <td data-label="Next action">Verify this root <code>progress.html</code> and commit it.</td>
+          <td data-label="Next action">Verify prompt docs and open PR.</td>
           <td data-label="Verification">Pending <code>ruby scripts/verify.rb</code>.</td>
         </tr>
         <tr tabindex="0" data-state="waiting">
-          <td data-label="Slice">Merge root tracker</td>
+          <td data-label="Slice">Merge install prompt</td>
           <td data-label="State"><span class="state waiting">waiting</span></td>
           <td data-label="Owner">agent</td>
-          <td data-label="Next action">Open and merge PR after local verification.</td>
+          <td data-label="Next action">Merge after local verification.</td>
           <td data-label="Verification">Pending GitHub PR URL.</td>
         </tr>
         <tr tabindex="0" data-state="waiting">
