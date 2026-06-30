@@ -49,6 +49,7 @@ Every `progress.html` should show:
 - all slices or chunks
 - each slice state in text, not color only
 - owner or actor when useful
+- updated timestamp for each slice or chunk
 - blocker or wait reason when present
 - verification evidence or next verification step
 - last-updated timestamp

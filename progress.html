@@ -136,7 +136,7 @@
     .progress-fill {
       display: block;
       height: 100%;
-      width: 75%;
+      width: 70%;
       background: var(--active);
     }
 
@@ -270,18 +270,18 @@
   <main>
     <header>
       <h1>progress.html</h1>
-      <p class="meta">Project: Progress HTML tool | Last updated: 2026-06-30 12:03 ET</p>
+      <p class="meta">Project: Progress HTML tool | Last updated: 2026-06-30 12:08 ET</p>
       <p class="note">Visible status for the standalone Progress HTML repo. Update this file when slices change state.</p>
     </header>
 
     <section class="summary" aria-label="Current progress summary">
       <div>
         <span class="label">Current goal</span>
-        <span class="value">Add an install prompt for applying Progress HTML across tool repos.</span>
+        <span class="value">Add explicit timestamps to Progress HTML trackers.</span>
       </div>
       <div>
         <span class="label">Active slice</span>
-        <span class="value">Install prompt</span>
+        <span class="value">Timestamp fields</span>
       </div>
       <div>
         <span class="label">Open blockers</span>
@@ -289,16 +289,16 @@
       </div>
       <div>
         <span class="label">Done</span>
-        <span class="value">6 of 8</span>
+        <span class="value">7 of 10</span>
       </div>
     </section>
 
     <section class="progress-meter" aria-labelledby="progress-label">
       <header>
         <span class="label" id="progress-label">Overall progress</span>
-        <strong>6 of 8 slices done</strong>
+        <strong>7 of 10 slices done</strong>
       </header>
-      <div class="progress-track" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="Overall progress: 75 percent">
+      <div class="progress-track" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" aria-label="Overall progress: 70 percent">
         <span class="progress-fill"></span>
       </div>
     </section>
@@ -306,7 +306,7 @@
     <section class="next-action" aria-labelledby="do-next">
       <div>
         <h2 id="do-next">Do next</h2>
-        <p>Verify the install prompt, then merge it into main.</p>
+        <p>Verify timestamp fields, then merge them into main.</p>
         <small>Owner: agent | Evidence expected: <code>ruby scripts/verify.rb</code> passes and PR merges.</small>
       </div>
       <button type="button" data-jump-next>Show active slice</button>
@@ -315,6 +315,7 @@
     <section class="log" aria-labelledby="latest-update">
       <h2 id="latest-update">Latest update</h2>
       <ol>
+        <li><strong>12:08</strong> Added explicit updated timestamps to template slices and the root tracker.</li>
         <li><strong>12:03</strong> Added an install prompt for Codex or Claude Code to apply Progress HTML across tool repos.</li>
         <li><strong>11:58</strong> Created root <code>progress.html</code> from the ledger template and rewrote it for this repo.</li>
         <li><strong>11:55</strong> Added the prominent <strong>Do next</strong> section to all shipped templates.</li>
@@ -338,6 +339,7 @@
           <th scope="col">Slice</th>
           <th scope="col">State</th>
           <th scope="col">Owner</th>
+          <th scope="col">Updated</th>
           <th scope="col">Next action</th>
           <th scope="col">Verification</th>
         </tr>
@@ -347,6 +349,7 @@
           <td data-label="Slice">Standalone tool repo</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T11:30:00-04:00">2026-06-30 11:30 ET</time></td>
           <td data-label="Next action">None.</td>
           <td data-label="Verification">Repo exists at <code>henryvn27/progress-html</code>.</td>
         </tr>
@@ -354,6 +357,7 @@
           <td data-label="Slice">Template set</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T11:36:00-04:00">2026-06-30 11:36 ET</time></td>
           <td data-label="Next action">None.</td>
           <td data-label="Verification">Ledger, rail, and board templates exist in <code>templates/</code>.</td>
         </tr>
@@ -361,6 +365,7 @@
           <td data-label="Slice">Tool integrations</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T11:49:00-04:00">2026-06-30 11:49 ET</time></td>
           <td data-label="Next action">None.</td>
           <td data-label="Verification"><code>docs/integrations.md</code> and <code>examples/</code> document wiring.</td>
         </tr>
@@ -368,6 +373,7 @@
           <td data-label="Slice">Clear next action UI</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">user</td>
+          <td data-label="Updated"><time datetime="2026-06-30T11:55:00-04:00">2026-06-30 11:55 ET</time></td>
           <td data-label="Next action">Refresh the template tab and review the Do next block.</td>
           <td data-label="Verification">Merged in PR #3.</td>
         </tr>
@@ -375,6 +381,7 @@
           <td data-label="Slice">Create root tracker</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T11:58:00-04:00">2026-06-30 11:58 ET</time></td>
           <td data-label="Next action">Keep it updated during future repo work.</td>
           <td data-label="Verification">Merged in PR #4.</td>
         </tr>
@@ -382,20 +389,31 @@
           <td data-label="Slice">Progress bars</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T11:57:00-04:00">2026-06-30 11:57 ET</time></td>
           <td data-label="Next action">None.</td>
           <td data-label="Verification">Merged in PR #5.</td>
         </tr>
-        <tr tabindex="0" data-state="active">
+        <tr tabindex="0" data-state="done">
           <td data-label="Slice">Install prompt</td>
+          <td data-label="State"><span class="state done">done</span></td>
+          <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T12:03:00-04:00">2026-06-30 12:03 ET</time></td>
+          <td data-label="Next action">Use it when applying the tool across repos.</td>
+          <td data-label="Verification">Merged in PR #6.</td>
+        </tr>
+        <tr tabindex="0" data-state="active">
+          <td data-label="Slice">Timestamp fields</td>
           <td data-label="State"><span class="state active">active</span></td>
           <td data-label="Owner">agent</td>
-          <td data-label="Next action">Verify prompt docs and open PR.</td>
+          <td data-label="Updated"><time datetime="2026-06-30T12:08:00-04:00">2026-06-30 12:08 ET</time></td>
+          <td data-label="Next action">Verify templates and root tracker include timestamp fields.</td>
           <td data-label="Verification">Pending <code>ruby scripts/verify.rb</code>.</td>
         </tr>
         <tr tabindex="0" data-state="waiting">
-          <td data-label="Slice">Merge install prompt</td>
+          <td data-label="Slice">Merge timestamps</td>
           <td data-label="State"><span class="state waiting">waiting</span></td>
           <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T12:08:00-04:00">2026-06-30 12:08 ET</time></td>
           <td data-label="Next action">Merge after local verification.</td>
           <td data-label="Verification">Pending GitHub PR URL.</td>
         </tr>
@@ -403,6 +421,7 @@
           <td data-label="Slice">User review</td>
           <td data-label="State"><span class="state waiting">waiting</span></td>
           <td data-label="Owner">user</td>
+          <td data-label="Updated"><time datetime="2026-06-30T12:03:00-04:00">2026-06-30 12:03 ET</time></td>
           <td data-label="Next action">Open root <code>progress.html</code> and check whether the visible status is useful.</td>
           <td data-label="Verification">User feedback.</td>
         </tr>
@@ -457,7 +476,7 @@
         const visible = rows.filter((row) => !row.classList.contains("is-muted"));
         const text = visible.map((row) => {
           const cells = [...row.querySelectorAll("td")].map((cell) => cell.innerText.trim().replace(/\s+/g, " "));
-          return `${cells[0]}: ${cells[1]} | next: ${cells[3]} | verification: ${cells[4]}`;
+          return `${cells[0]}: ${cells[1]} | updated: ${cells[3]} | next: ${cells[4]} | verification: ${cells[5]}`;
         }).join("\n");
         await copyText(text);
         copyState.textContent = "Copied";

@@ -348,6 +348,7 @@
         <dl>
           <dt>State</dt><dd>active</dd>
           <dt>Owner</dt><dd>agent</dd>
+          <dt>Updated</dt><dd><time datetime="2026-06-30T14:15:00-04:00">2026-06-30 14:15 ET</time></dd>
           <dt>Next</dt><dd>Run <code>orca tools</code>.</dd>
           <dt>Verification</dt><dd>Tool appears in catalog output.</dd>
         </dl>
@@ -359,6 +360,7 @@
         <dl>
           <dt>State</dt><dd>active</dd>
           <dt>Owner</dt><dd>agent</dd>
+          <dt>Updated</dt><dd><time datetime="2026-06-30T13:42:00-04:00">2026-06-30 13:42 ET</time></dd>
           <dt>Next</dt><dd>Push main branch.</dd>
           <dt>Verification</dt><dd>Remote URL loads.</dd>
         </dl>
@@ -376,6 +378,7 @@
         <dl>
           <dt>State</dt><dd>queued</dd>
           <dt>Owner</dt><dd>agent</dd>
+          <dt>Updated</dt><dd><time datetime="2026-06-30T13:58:00-04:00">2026-06-30 13:58 ET</time></dd>
           <dt>Next</dt><dd>Run README pass.</dd>
           <dt>Verification</dt><dd>User can create <code>progress.html</code>.</dd>
         </dl>
@@ -393,6 +396,7 @@
         <dl>
           <dt>State</dt><dd>waiting</dd>
           <dt>Owner</dt><dd>user</dd>
+          <dt>Updated</dt><dd><time datetime="2026-06-30T14:00:00-04:00">2026-06-30 14:00 ET</time></dd>
           <dt>Next</dt><dd>Choose a direction.</dd>
           <dt>Verification</dt><dd>Feedback recorded in tracker.</dd>
         </dl>
@@ -410,6 +414,7 @@
         <dl>
           <dt>State</dt><dd>done</dd>
           <dt>Owner</dt><dd>agent</dd>
+          <dt>Updated</dt><dd><time datetime="2026-06-30T13:20:00-04:00">2026-06-30 13:20 ET</time></dd>
           <dt>Next</dt><dd>None.</dd>
           <dt>Verification</dt><dd>Notes saved in <code>docs/research.md</code>.</dd>
         </dl>
@@ -421,6 +426,7 @@
         <dl>
           <dt>State</dt><dd>done</dd>
           <dt>Owner</dt><dd>agent</dd>
+          <dt>Updated</dt><dd><time datetime="2026-06-30T13:32:00-04:00">2026-06-30 13:32 ET</time></dd>
           <dt>Next</dt><dd>None.</dd>
           <dt>Verification</dt><dd>Rule saved in <code>docs/agent-instructions.md</code>.</dd>
         </dl>
@@ -485,8 +491,9 @@
         const text = cards.filter((card) => !card.classList.contains("is-muted")).map((card) => {
           const title = card.querySelector("h3").innerText.trim();
           const state = card.dataset.state;
+          const updated = [...card.querySelectorAll("dt")].find((dt) => dt.innerText.trim() === "Updated")?.nextElementSibling?.innerText.trim();
           const verification = [...card.querySelectorAll("dt")].find((dt) => dt.innerText.trim() === "Verification")?.nextElementSibling?.innerText.trim();
-          return `${title}: ${state} | verification: ${verification}`;
+          return `${title}: ${state} | updated: ${updated} | verification: ${verification}`;
         }).join("\n");
         await copyText(text);
         copyState.textContent = "Copied";

@@ -10,6 +10,7 @@ Use this skill when the user wants a visible `progress.html` tracker, or when a 
 4. Periodically compare it to the current plan.
 5. Before final response, make sure the file is current.
 6. Mention the path or offer to open it when useful.
+7. Keep timestamps current for changed slices or chunks.
 
 ## State Language
 

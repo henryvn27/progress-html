@@ -336,6 +336,7 @@
           <th scope="col">Slice</th>
           <th scope="col">State</th>
           <th scope="col">Owner</th>
+          <th scope="col">Updated</th>
           <th scope="col">Next action</th>
           <th scope="col">Verification</th>
         </tr>
@@ -345,6 +346,7 @@
           <td data-label="Slice">Inventory existing skills</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T13:05:00-04:00">2026-06-30 13:05 ET</time></td>
           <td data-label="Next action">None.</td>
           <td data-label="Verification">List saved in <code>catalog/tools</code>.</td>
         </tr>
@@ -352,6 +354,7 @@
           <td data-label="Slice">Create standalone repo</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T13:42:00-04:00">2026-06-30 13:42 ET</time></td>
           <td data-label="Next action">Push remote.</td>
           <td data-label="Verification">README, templates, and verifier present.</td>
         </tr>
@@ -359,6 +362,7 @@
           <td data-label="Slice">Catalog wiring</td>
           <td data-label="State"><span class="state active">active</span></td>
           <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T14:15:00-04:00">2026-06-30 14:15 ET</time></td>
           <td data-label="Next action">Add JSON entry and run manager validation.</td>
           <td data-label="Verification">Pending <code>./bin/orca tools</code>.</td>
         </tr>
@@ -366,6 +370,7 @@
           <td data-label="Slice">User review</td>
           <td data-label="State"><span class="state waiting">waiting</span></td>
           <td data-label="Owner">user</td>
+          <td data-label="Updated"><time datetime="2026-06-30T14:00:00-04:00">2026-06-30 14:00 ET</time></td>
           <td data-label="Next action">Choose preferred template direction.</td>
           <td data-label="Verification">Feedback captured in issue tracker.</td>
         </tr>
@@ -373,6 +378,7 @@
           <td data-label="Slice">Publish release</td>
           <td data-label="State"><span class="state blocked">blocked</span></td>
           <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T14:12:00-04:00">2026-06-30 14:12 ET</time></td>
           <td data-label="Next action">Wait for repo creation permission if GitHub rejects create.</td>
           <td data-label="Verification">Remote URL reachable.</td>
         </tr>
@@ -427,7 +433,7 @@
         const visible = rows.filter((row) => !row.classList.contains("is-muted"));
         const text = visible.map((row) => {
           const cells = [...row.querySelectorAll("td")].map((cell) => cell.innerText.trim().replace(/\s+/g, " "));
-          return `${cells[0]}: ${cells[1]} | next: ${cells[3]} | verification: ${cells[4]}`;
+          return `${cells[0]}: ${cells[1]} | updated: ${cells[3]} | next: ${cells[4]} | verification: ${cells[5]}`;
         }).join("\n");
         await copyText(text);
         copyState.textContent = "Copied";
