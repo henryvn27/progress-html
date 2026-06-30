@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>progress.html | Board</title>
+  <style>
+    :root {
+      --bg: #f4f4f1;
+      --ink: #20211f;
+      --muted: #656963;
+      --line: #cdcec8;
+      --panel: #ffffff;
+      --head: #e8e8e2;
+      --active: #135d66;
+      --next: #595d21;
+      --wait: #765915;
+      --done: #2f6338;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    main {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 20px 44px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+      padding-bottom: 18px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 28px;
+      line-height: 1.1;
+    }
+
+    p { margin: 0; }
+
+    .muted { color: var(--muted); }
+
+    .latest {
+      min-width: 300px;
+      max-width: 420px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 12px;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      margin-bottom: 18px;
+    }
+
+    .stats div {
+      background: var(--panel);
+      padding: 12px;
+    }
+
+    .stats strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .column {
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: #fafaf8;
+    }
+
+    .column h2 {
+      margin: 0;
+      padding: 11px 12px;
+      background: var(--head);
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .items {
+      display: grid;
+      gap: 1px;
+      background: var(--line);
+    }
+
+    article {
+      background: var(--panel);
+      padding: 12px;
+      min-height: 150px;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .state {
+      display: inline-block;
+      margin-bottom: 8px;
+      border: 1px solid currentColor;
+      padding: 2px 7px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .active { color: var(--active); }
+    .next { color: var(--next); }
+    .waiting { color: var(--wait); }
+    .done { color: var(--done); }
+
+    dl {
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 5px 8px;
+      margin: 10px 0 0;
+    }
+
+    dt {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    dd { margin: 0; }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      background: #eeeeea;
+      padding: 1px 4px;
+    }
+
+    @media (max-width: 980px) {
+      .board, .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 680px) {
+      main { padding: 22px 14px 36px; }
+      header { display: block; }
+      .latest { min-width: 0; max-width: none; margin-top: 14px; }
+      .board, .stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>progress.html</h1>
+        <p class="muted">Board view for parallel slices and chunks. Last updated: 2026-06-30 14:15 ET.</p>
+      </div>
+      <section class="latest" aria-labelledby="latest-update">
+        <span class="label" id="latest-update">Latest update</span>
+        <p>Catalog validation is the active chunk. Template files are complete and awaiting user review.</p>
+      </section>
+    </header>
+
+    <section class="stats" aria-label="Progress summary">
+      <div><span class="label">Current goal</span><strong>Progress tool</strong></div>
+      <div><span class="label">Active</span><strong>2 chunks</strong></div>
+      <div><span class="label">Waiting</span><strong>1 chunk</strong></div>
+      <div><span class="label">Verification</span><strong>pending</strong></div>
+    </section>
+
+    <section class="board" aria-label="Slice board">
+      <div class="column">
+        <h2>Now</h2>
+        <div class="items">
+      <article>
+        <span class="state active">active</span>
+        <h3>Manager catalog entry</h3>
+        <p>Add the tool JSON so it is referenceable by the overall manager.</p>
+        <dl>
+          <dt>State</dt><dd>active</dd>
+          <dt>Owner</dt><dd>agent</dd>
+          <dt>Next</dt><dd>Run <code>orca tools</code>.</dd>
+          <dt>Verification</dt><dd>Tool appears in catalog output.</dd>
+        </dl>
+          </article>
+          <article>
+            <span class="state active">active</span>
+        <h3>Standalone repo push</h3>
+        <p>Create the remote repository and push the first clean commit.</p>
+        <dl>
+          <dt>State</dt><dd>active</dd>
+          <dt>Owner</dt><dd>agent</dd>
+          <dt>Next</dt><dd>Push main branch.</dd>
+          <dt>Verification</dt><dd>Remote URL loads.</dd>
+        </dl>
+          </article>
+        </div>
+      </div>
+
+      <div class="column">
+        <h2>Next</h2>
+        <div class="items">
+          <article>
+            <span class="state next">queued</span>
+        <h3>Install instructions</h3>
+        <p>Confirm the README has a direct copy path and no hook setup.</p>
+        <dl>
+          <dt>State</dt><dd>queued</dd>
+          <dt>Owner</dt><dd>agent</dd>
+          <dt>Next</dt><dd>Run README pass.</dd>
+          <dt>Verification</dt><dd>User can create <code>progress.html</code>.</dd>
+        </dl>
+          </article>
+        </div>
+      </div>
+
+      <div class="column">
+        <h2>Waiting</h2>
+        <div class="items">
+          <article>
+            <span class="state waiting">waiting</span>
+        <h3>Template selection</h3>
+        <p>User reviews ledger, rail, and board variants for taste and function.</p>
+        <dl>
+          <dt>State</dt><dd>waiting</dd>
+          <dt>Owner</dt><dd>user</dd>
+          <dt>Next</dt><dd>Choose a direction.</dd>
+          <dt>Verification</dt><dd>Feedback recorded in tracker.</dd>
+        </dl>
+          </article>
+        </div>
+      </div>
+
+      <div class="column">
+        <h2>Done</h2>
+        <div class="items">
+          <article>
+            <span class="state done">done</span>
+        <h3>Research pass</h3>
+        <p>Captured practical rules for non-decorative, accessible progress status UI.</p>
+        <dl>
+          <dt>State</dt><dd>done</dd>
+          <dt>Owner</dt><dd>agent</dd>
+          <dt>Next</dt><dd>None.</dd>
+          <dt>Verification</dt><dd>Notes saved in <code>docs/research.md</code>.</dd>
+        </dl>
+          </article>
+          <article>
+            <span class="state done">done</span>
+        <h3>Agent update rule</h3>
+        <p>Instructions specify direct file updates after each meaningful state change.</p>
+        <dl>
+          <dt>State</dt><dd>done</dd>
+          <dt>Owner</dt><dd>agent</dd>
+          <dt>Next</dt><dd>None.</dd>
+          <dt>Verification</dt><dd>Rule saved in <code>docs/agent-instructions.md</code>.</dd>
+        </dl>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+
+ROOT = File.expand_path("..", __dir__)
+TEMPLATES = {
+  "ledger" => "progress-ledger.html",
+  "rail" => "progress-rail.html",
+  "board" => "progress-board.html"
+}.freeze
+
+def usage
+  warn "usage: progress-html init --template ledger|rail|board [--target progress.html]"
+  exit 1
+end
+
+cmd = ARGV.shift
+usage unless cmd == "init"
+
+template = "ledger"
+target = "progress.html"
+
+until ARGV.empty?
+  flag = ARGV.shift
+  case flag
+  when "--template"
+    template = ARGV.shift || usage
+  when "--target"
+    target = ARGV.shift || usage
+  else
+    usage
+  end
+end
+
+file = TEMPLATES.fetch(template) { usage }
+source = File.join(ROOT, "templates", file)
+FileUtils.cp(source, target)
+puts "created #{target} from #{file}"
+puts "update #{target} whenever a slice or chunk changes state"
+

@@ -1,0 +1,15 @@
+{
+  "id": "progress-html",
+  "name": "Progress HTML",
+  "repo": "https://github.com/henryvn27/progress-html",
+  "description": "Static progress.html templates and agent instructions for keeping user-visible work progress current across slices and chunks.",
+  "category": "visibility",
+  "install": {
+    "git": "git clone https://github.com/henryvn27/progress-html.git"
+  },
+  "verify": "ruby scripts/verify.rb",
+  "dependencies": [],
+  "conflicts": [],
+  "provides": ["progress-html-template", "agent-update-instructions", "slice-status-dashboard"],
+  "license": "MIT"
+}

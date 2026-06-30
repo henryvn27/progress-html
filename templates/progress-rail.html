@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>progress.html | Rail</title>
+  <style>
+    :root {
+      --bg: #fbfaf7;
+      --ink: #181818;
+      --muted: #686868;
+      --line: #cfcac0;
+      --soft: #f0eee8;
+      --active: #155e63;
+      --blocked: #922f2f;
+      --done: #315d38;
+      --wait: #7a5b14;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 34px 22px 54px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: end;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 20px;
+      margin-bottom: 26px;
+    }
+
+    h1 {
+      font-size: 30px;
+      margin: 0 0 6px;
+      line-height: 1.1;
+    }
+
+    p { margin: 0; }
+
+    .muted { color: var(--muted); }
+
+    .stamp {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      min-width: 210px;
+      background: var(--soft);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      margin-bottom: 28px;
+    }
+
+    .status-strip div {
+      padding: 13px 14px;
+      border-right: 1px solid var(--line);
+    }
+
+    .status-strip div:last-child { border-right: 0; }
+
+    .label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 4px;
+    }
+
+    .rail {
+      position: relative;
+      margin-left: 14px;
+      padding-left: 28px;
+      border-left: 2px solid var(--line);
+    }
+
+    .slice {
+      position: relative;
+      padding: 0 0 28px;
+    }
+
+    .slice::before {
+      content: "";
+      position: absolute;
+      left: -37px;
+      top: 4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--line);
+    }
+
+    .slice.done::before { border-color: var(--done); background: #e5efe6; }
+    .slice.active::before { border-color: var(--active); background: #e2eff0; }
+    .slice.blocked::before { border-color: var(--blocked); background: #f4e4e4; }
+    .slice.waiting::before { border-color: var(--wait); background: #f2ead2; }
+
+    .slice h2 {
+      font-size: 18px;
+      margin: 0 0 7px;
+      line-height: 1.25;
+    }
+
+    .state {
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 700;
+    }
+
+    .done .state { color: var(--done); }
+    .active .state { color: var(--active); }
+    .blocked .state { color: var(--blocked); }
+    .waiting .state { color: var(--wait); }
+
+    .details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .details p {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 10px 12px;
+    }
+
+    .latest {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 14px;
+      margin-bottom: 28px;
+    }
+
+    .latest h2 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin: 0 0 8px;
+    }
+
+    @media (max-width: 720px) {
+      header, .details, .status-strip { grid-template-columns: 1fr; }
+      .status-strip div { border-right: 0; border-bottom: 1px solid var(--line); }
+      .status-strip div:last-child { border-bottom: 0; }
+      .stamp { min-width: 0; }
+      main { padding: 24px 15px 40px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>progress.html</h1>
+        <p class="muted">Sequential slice tracker for agent-maintained work.</p>
+      </div>
+      <div class="stamp">Last updated<br>2026-06-30 14:15 ET</div>
+    </header>
+
+    <section class="status-strip" aria-label="Progress summary">
+      <div><span class="label">Goal</span>Ship the first usable progress tracker tool.</div>
+      <div><span class="label">Current slice</span>Template review</div>
+      <div><span class="label">State</span>active</div>
+      <div><span class="label">Verification</span>Ruby verifier pending</div>
+    </section>
+
+    <section class="latest" aria-labelledby="latest-update">
+      <h2 id="latest-update">Latest update</h2>
+      <p>Template C is being checked for responsive layout and text state labels. Next: run the verifier and publish the repo.</p>
+    </section>
+
+    <section class="rail" aria-label="Slice rail">
+      <article class="slice done">
+        <h2>1. Define visible progress contract <span class="state">done</span></h2>
+        <p class="muted">Progress must show all slices, latest update, blockers, and proof.</p>
+        <div class="details">
+          <p><span class="label">Next action</span>None.</p>
+          <p><span class="label">Verification</span>Contract captured in docs and templates.</p>
+        </div>
+      </article>
+
+      <article class="slice done">
+        <h2>2. Build standalone templates <span class="state">done</span></h2>
+        <p class="muted">Ledger, rail, and board variants are present as standalone HTML files.</p>
+        <div class="details">
+          <p><span class="label">Next action</span>Keep examples realistic.</p>
+          <p><span class="label">Verification</span>Files open locally without a build step.</p>
+        </div>
+      </article>
+
+      <article class="slice active">
+        <h2>3. Wire tool metadata <span class="state">active</span></h2>
+        <p class="muted">Add catalog entry and make the tool referenceable by the manager.</p>
+        <div class="details">
+          <p><span class="label">Next action</span>Run manager validation.</p>
+          <p><span class="label">Verification</span><code>orca tools</code> lists the tool.</p>
+        </div>
+      </article>
+
+      <article class="slice waiting">
+        <h2>4. User template feedback <span class="state">waiting</span></h2>
+        <p class="muted">User reviews all three directions and chooses what to refine.</p>
+        <div class="details">
+          <p><span class="label">Next action</span>Collect design preference.</p>
+          <p><span class="label">Verification</span>Feedback is recorded in the tracker.</p>
+        </div>
+      </article>
+
+      <article class="slice blocked">
+        <h2>5. Release tag <span class="state">blocked</span></h2>
+        <p class="muted">Blocked until the remote repository exists and the first push succeeds.</p>
+        <div class="details">
+          <p><span class="label">Next action</span>Create or confirm GitHub repo.</p>
+          <p><span class="label">Verification</span>Remote clone works.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
+
