@@ -12,6 +12,7 @@ REQUIRED_TEXT = [
   "Latest update",
   "Slice",
   "State",
+  "Updated",
   "Verification"
 ].freeze
 
