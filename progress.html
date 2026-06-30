@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>progress.html | Ledger</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f7f5ef;
+      --ink: #1d1d1b;
+      --muted: #66645e;
+      --line: #d7d1c4;
+      --panel: #ffffff;
+      --active: #0f5f63;
+      --waiting: #8a5a00;
+      --blocked: #9b2f2f;
+      --done: #345b32;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 24px 48px;
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-size: 28px;
+      line-height: 1.1;
+      margin: 0 0 8px;
+      letter-spacing: 0;
+    }
+
+    .meta, .note {
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) repeat(3, minmax(120px, .6fr));
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      margin: 22px 0;
+    }
+
+    .summary > div {
+      background: var(--panel);
+      padding: 14px 16px;
+      min-height: 76px;
+    }
+
+    .next-action {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      border: 2px solid var(--ink);
+      background: #efebe1;
+      padding: 16px;
+      margin: 0 0 22px;
+    }
+
+    .next-action h2 {
+      margin: 0 0 6px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .next-action p {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 750;
+      line-height: 1.25;
+    }
+
+    .next-action small {
+      display: block;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 6px;
+    }
+
+    .value {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .log {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 16px;
+      margin-bottom: 22px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 0 0 14px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      padding: 7px 10px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    button[aria-pressed="true"] {
+      border-color: var(--ink);
+      background: #efebe1;
+      font-weight: 700;
+    }
+
+    button:focus-visible, tr:focus-visible {
+      outline: 2px solid var(--active);
+      outline-offset: 2px;
+    }
+
+    .log h2, .table-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin: 0 0 10px;
+    }
+
+    .log ol {
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    .log li + li { margin-top: 8px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      border: 1px solid var(--line);
+    }
+
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      background: #efebe1;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+    tr.is-muted { display: none; }
+    tr.is-focused td { background: #f2efe7; }
+
+    .state {
+      display: inline-flex;
+      min-width: 82px;
+      justify-content: center;
+      border: 1px solid currentColor;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .active { color: var(--active); }
+    .waiting { color: var(--waiting); }
+    .blocked { color: var(--blocked); }
+    .done { color: var(--done); }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      background: #efebe1;
+      padding: 1px 4px;
+    }
+
+    .copied {
+      color: var(--done);
+      font-size: 13px;
+    }
+
+    @media (max-width: 760px) {
+      main { padding: 22px 14px 36px; }
+      .summary { grid-template-columns: 1fr; }
+      .next-action { grid-template-columns: 1fr; }
+      table, thead, tbody, tr, th, td { display: block; }
+      thead { display: none; }
+      tr { border-bottom: 1px solid var(--line); }
+      td { border: 0; padding: 9px 12px; }
+      td::before {
+        content: attr(data-label);
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        margin-bottom: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>progress.html</h1>
+      <p class="meta">Project: Progress HTML tool | Last updated: 2026-06-30 11:58 ET</p>
+      <p class="note">Visible status for the standalone Progress HTML repo. Update this file when slices change state.</p>
+    </header>
+
+    <section class="summary" aria-label="Current progress summary">
+      <div>
+        <span class="label">Current goal</span>
+        <span class="value">Add a real root progress.html for this tool repo.</span>
+      </div>
+      <div>
+        <span class="label">Active slice</span>
+        <span class="value">Create root tracker</span>
+      </div>
+      <div>
+        <span class="label">Open blockers</span>
+        <span class="value">0</span>
+      </div>
+      <div>
+        <span class="label">Done</span>
+        <span class="value">4 of 7</span>
+      </div>
+    </section>
+
+    <section class="next-action" aria-labelledby="do-next">
+      <div>
+        <h2 id="do-next">Do next</h2>
+        <p>Verify the new root tracker, then merge it into main.</p>
+        <small>Owner: agent | Evidence expected: <code>ruby scripts/verify.rb</code> passes and PR merges.</small>
+      </div>
+      <button type="button" data-jump-next>Show active slice</button>
+    </section>
+
+    <section class="log" aria-labelledby="latest-update">
+      <h2 id="latest-update">Latest update</h2>
+      <ol>
+        <li><strong>11:58</strong> Created root <code>progress.html</code> from the ledger template and rewrote it for this repo.</li>
+        <li><strong>11:55</strong> Added the prominent <strong>Do next</strong> section to all shipped templates.</li>
+        <li><strong>11:49</strong> Added integration recipes for goal runner, GitHub flow, QA, Notion, orchestration, and learning sidecar.</li>
+      </ol>
+    </section>
+
+    <h2 class="table-title">Slice Ledger</h2>
+    <div class="toolbar" aria-label="Ledger controls">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="active">Active</button>
+      <button type="button" data-filter="waiting">Waiting</button>
+      <button type="button" data-filter="blocked">Blocked</button>
+      <button type="button" data-filter="done">Done</button>
+      <button type="button" data-copy-summary>Copy summary</button>
+      <span class="copied" data-copy-state aria-live="polite"></span>
+    </div>
+    <table data-progress-table>
+      <thead>
+        <tr>
+          <th scope="col">Slice</th>
+          <th scope="col">State</th>
+          <th scope="col">Owner</th>
+          <th scope="col">Next action</th>
+          <th scope="col">Verification</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr tabindex="0" data-state="done">
+          <td data-label="Slice">Standalone tool repo</td>
+          <td data-label="State"><span class="state done">done</span></td>
+          <td data-label="Owner">agent</td>
+          <td data-label="Next action">None.</td>
+          <td data-label="Verification">Repo exists at <code>henryvn27/progress-html</code>.</td>
+        </tr>
+        <tr tabindex="0" data-state="done">
+          <td data-label="Slice">Template set</td>
+          <td data-label="State"><span class="state done">done</span></td>
+          <td data-label="Owner">agent</td>
+          <td data-label="Next action">None.</td>
+          <td data-label="Verification">Ledger, rail, and board templates exist in <code>templates/</code>.</td>
+        </tr>
+        <tr tabindex="0" data-state="done">
+          <td data-label="Slice">Tool integrations</td>
+          <td data-label="State"><span class="state done">done</span></td>
+          <td data-label="Owner">agent</td>
+          <td data-label="Next action">None.</td>
+          <td data-label="Verification"><code>docs/integrations.md</code> and <code>examples/</code> document wiring.</td>
+        </tr>
+        <tr tabindex="0" data-state="done">
+          <td data-label="Slice">Clear next action UI</td>
+          <td data-label="State"><span class="state done">done</span></td>
+          <td data-label="Owner">user</td>
+          <td data-label="Next action">Refresh the template tab and review the Do next block.</td>
+          <td data-label="Verification">Merged in PR #3.</td>
+        </tr>
+        <tr tabindex="0" data-state="active">
+          <td data-label="Slice">Create root tracker</td>
+          <td data-label="State"><span class="state active">active</span></td>
+          <td data-label="Owner">agent</td>
+          <td data-label="Next action">Verify this root <code>progress.html</code> and commit it.</td>
+          <td data-label="Verification">Pending <code>ruby scripts/verify.rb</code>.</td>
+        </tr>
+        <tr tabindex="0" data-state="waiting">
+          <td data-label="Slice">Merge root tracker</td>
+          <td data-label="State"><span class="state waiting">waiting</span></td>
+          <td data-label="Owner">agent</td>
+          <td data-label="Next action">Open and merge PR after local verification.</td>
+          <td data-label="Verification">Pending GitHub PR URL.</td>
+        </tr>
+        <tr tabindex="0" data-state="waiting">
+          <td data-label="Slice">User review</td>
+          <td data-label="State"><span class="state waiting">waiting</span></td>
+          <td data-label="Owner">user</td>
+          <td data-label="Next action">Open root <code>progress.html</code> and check whether the visible status is useful.</td>
+          <td data-label="Verification">User feedback.</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+  <script>
+    (() => {
+      const rows = [...document.querySelectorAll("[data-progress-table] tbody tr")];
+      const buttons = [...document.querySelectorAll("[data-filter]")];
+      const copyButton = document.querySelector("[data-copy-summary]");
+      const copyState = document.querySelector("[data-copy-state]");
+      const jumpNext = document.querySelector("[data-jump-next]");
+      const copyText = async (text) => {
+        if (navigator.clipboard) {
+          try {
+            await navigator.clipboard.writeText(text);
+            return;
+          } catch (_) {}
+        }
+        const area = document.createElement("textarea");
+        area.value = text;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      };
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const filter = button.dataset.filter;
+          buttons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+          rows.forEach((row) => row.classList.toggle("is-muted", filter !== "all" && row.dataset.state !== filter));
+        });
+      });
+
+      rows.forEach((row) => {
+        row.addEventListener("click", () => {
+          rows.forEach((item) => item.classList.remove("is-focused"));
+          row.classList.add("is-focused");
+        });
+      });
+
+      jumpNext.addEventListener("click", () => {
+        const active = rows.find((row) => row.dataset.state === "active");
+        active?.scrollIntoView({ behavior: "smooth", block: "center" });
+        active?.focus();
+        active?.click();
+      });
+
+      copyButton.addEventListener("click", async () => {
+        const visible = rows.filter((row) => !row.classList.contains("is-muted"));
+        const text = visible.map((row) => {
+          const cells = [...row.querySelectorAll("td")].map((cell) => cell.innerText.trim().replace(/\s+/g, " "));
+          return `${cells[0]}: ${cells[1]} | next: ${cells[3]} | verification: ${cells[4]}`;
+        }).join("\n");
+        await copyText(text);
+        copyState.textContent = "Copied";
+        setTimeout(() => { copyState.textContent = ""; }, 1800);
+      });
+    })();
+  </script>
+</body>
+</html>

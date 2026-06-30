@@ -41,6 +41,7 @@ end
 
 %w[
   README.md
+  progress.html
   docs/agent-instructions.md
   docs/integrations.md
   docs/research.md
