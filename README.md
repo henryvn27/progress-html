@@ -22,6 +22,13 @@ All templates are static HTML with inline CSS and inline JavaScript. No external
 
 Use [docs/agent-instructions.md](docs/agent-instructions.md). The rule is simple: update `progress.html` when slice state changes, then offer the user the file path or link.
 
+## Integrations
+
+Use [docs/integrations.md](docs/integrations.md) when another tool sees an existing `progress.html`.
+
+- `/goal` and goal runner: [examples/goal-runner.md](examples/goal-runner.md)
+- generic tool wiring: [examples/tool-wiring.md](examples/tool-wiring.md)
+
 ## Verify
 
 ```sh

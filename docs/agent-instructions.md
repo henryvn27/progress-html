@@ -2,6 +2,10 @@
 
 Use this when a repo has a `progress.html` file or when the user asks for visible progress across slices, chunks, phases, specs, or goals.
 
+## Detection
+
+At the start of meaningful work, check whether `progress.html` exists in the repo root. If it exists, wire your normal work checkpoints into it. If it does not exist, do not create one unless the user asked for visible progress.
+
 ## Rule
 
 Keep `progress.html` current. No hook system is required.
@@ -57,3 +61,6 @@ Every `progress.html` should show:
 - Do not hide skipped or blocked work. Mark it clearly.
 - Do not mark a slice done without evidence or a clear verification note.
 
+## Tool Integrations
+
+See [integrations.md](integrations.md) for `/goal`, orchestration, background mode, GitHub flow, QA, Notion, and learning-sidecar recipes.

@@ -38,7 +38,16 @@ TEMPLATES.each do |path|
   end
 end
 
-%w[README.md docs/agent-instructions.md docs/research.md skills/progress-html/SKILL.md orca-tool.json].each do |relative|
+%w[
+  README.md
+  docs/agent-instructions.md
+  docs/integrations.md
+  docs/research.md
+  examples/goal-runner.md
+  examples/tool-wiring.md
+  skills/progress-html/SKILL.md
+  orca-tool.json
+].each do |relative|
   path = File.join(ROOT, relative)
   abort "missing #{relative}" unless File.exist?(path)
 end
