@@ -2,7 +2,7 @@
   "id": "progress-html",
   "name": "Progress HTML",
   "repo": "https://github.com/henryvn27/progress-html",
-  "description": "Static progress.html templates and agent instructions for keeping user-visible work progress current across slices and chunks.",
+  "description": "Static progress.html ledger template and agent instructions for keeping user-visible work progress current across slices and chunks.",
   "category": "visibility",
   "install": {
     "git": "git clone https://github.com/henryvn27/progress-html.git"

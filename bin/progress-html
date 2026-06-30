@@ -10,13 +10,11 @@ require "pathname"
 
 ROOT = File.expand_path("..", __dir__)
 TEMPLATES = {
-  "ledger" => "progress-ledger.html",
-  "rail" => "progress-rail.html",
-  "board" => "progress-board.html"
+  "ledger" => "progress-ledger.html"
 }.freeze
 
 def usage
-  warn "usage: progress-html init --template ledger|rail|board [--target progress.html]"
+  warn "usage: progress-html init [--template ledger] [--target progress.html]"
   exit 1
 end
 

@@ -1,6 +1,6 @@
 # Proof
 
-This repo contains three complete static `progress.html` templates plus an instruction layer agents can install into projects.
+This repo contains one static `progress.html` ledger template plus an instruction layer agents can install into projects.
 
 ## Verify
 
@@ -8,7 +8,7 @@ This repo contains three complete static `progress.html` templates plus an instr
 ruby scripts/verify.rb
 ```
 
-The verifier checks that each template is standalone, includes slice/chunk status content, avoids external assets, and includes accessible non-color status labels.
+The verifier checks that the template is standalone, includes slice/chunk status content, avoids external assets, and includes accessible non-color status labels.
 
 `docs/integrations.md` and `examples/` show how existing tools wire to `progress.html` without hooks, watchers, or wrappers.
 

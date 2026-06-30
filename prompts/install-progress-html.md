@@ -13,9 +13,7 @@ Goal:
 
 Source:
 - Use the Progress HTML repo as the source of truth.
-- Prefer `templates/progress-ledger.html` for dense tool repos.
-- Use `templates/progress-rail.html` only when the repo is mostly sequential workflow documentation.
-- Use `templates/progress-board.html` only when the repo naturally has parallel chunks.
+- Use `templates/progress-ledger.html`.
 - Use `docs/agent-instructions.md` and `docs/integrations.md` for the installed rule.
 
 Process:
@@ -23,7 +21,7 @@ Process:
 2. Skip repos with unrelated dirty work unless the dirty work is clearly the active Progress HTML install.
 3. For each clean tool repo:
    - If `progress.html` is missing, copy the best template to `progress.html`.
-   - Prefer `bin/progress-html init --template ledger|rail|board` when available so the generated file picks up the repo name, colors, and local logo/icon automatically.
+   - Prefer `bin/progress-html init --template ledger` when available so the generated file picks up the repo name, colors, and local logo/icon automatically.
    - Rewrite example content so it describes that repo's real current state.
    - Keep a clear `Do next` block near the top.
    - Keep the accessible progress bar.

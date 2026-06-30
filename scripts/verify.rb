@@ -18,7 +18,7 @@ REQUIRED_TEXT = [
   "Verification"
 ].freeze
 
-abort "expected 3 templates, found #{TEMPLATES.length}" unless TEMPLATES.length == 3
+abort "expected 1 template, found #{TEMPLATES.length}" unless TEMPLATES.length == 1
 
 TEMPLATES.each do |path|
   html = File.read(path)

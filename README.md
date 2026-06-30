@@ -1,6 +1,6 @@
 # Progress HTML
 
-Static `progress.html` templates and agent instructions for showing all active work slices in a way users can inspect at any time.
+Static `progress.html` ledger template and agent instructions for showing all active work slices in a way users can inspect at any time.
 
 Parent manager: https://github.com/henryvn27/orca-framework
 
@@ -10,13 +10,11 @@ No hooks. No daemon. No complex event bus.
 
 Agents update `progress.html` directly whenever they finish or change a meaningful slice: plan, build, QA, review, ship, blocker, or handoff. Periodically, the agent checks whether `progress.html` still matches the current plan and tells the user where to open it.
 
-## Templates
+## Template
 
-- [Template A: Ledger](templates/progress-ledger.html), dense operational table with latest update first.
-- [Template B: Rail](templates/progress-rail.html), vertical slice rail with clear current state.
-- [Template C: Board](templates/progress-board.html), compact chunk board grouped by state.
+- [Ledger](templates/progress-ledger.html), a dense operational table with latest update first and clear color-coded state rows.
 
-All templates are static HTML with inline CSS and inline JavaScript. No external dependencies.
+The template is static HTML with inline CSS and inline JavaScript. No external dependencies.
 
 When created with `bin/progress-html init`, the generated file is automatically personalized from the target repo's project name, existing color tokens, and the first local logo/icon asset it can find.
 
