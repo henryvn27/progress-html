@@ -87,6 +87,36 @@
       margin-bottom: 22px;
     }
 
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 0 0 14px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      padding: 7px 10px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    button[aria-pressed="true"] {
+      border-color: var(--ink);
+      background: #efebe1;
+      font-weight: 700;
+    }
+
+    button:focus-visible, tr:focus-visible {
+      outline: 2px solid var(--active);
+      outline-offset: 2px;
+    }
+
     .log h2, .table-title {
       font-size: 14px;
       text-transform: uppercase;
@@ -124,6 +154,8 @@
     }
 
     tr:last-child td { border-bottom: 0; }
+    tr.is-muted { display: none; }
+    tr.is-focused td { background: #f2efe7; }
 
     .state {
       display: inline-flex;
@@ -147,6 +179,11 @@
       font-size: 13px;
       background: #efebe1;
       padding: 1px 4px;
+    }
+
+    .copied {
+      color: var(--done);
+      font-size: 13px;
     }
 
     @media (max-width: 760px) {
@@ -204,9 +241,18 @@
     </section>
 
     <h2 class="table-title">Slice Ledger</h2>
-    <table>
+    <div class="toolbar" aria-label="Ledger controls">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="active">Active</button>
+      <button type="button" data-filter="waiting">Waiting</button>
+      <button type="button" data-filter="blocked">Blocked</button>
+      <button type="button" data-filter="done">Done</button>
+      <button type="button" data-copy-summary>Copy summary</button>
+      <span class="copied" data-copy-state aria-live="polite"></span>
+    </div>
+    <table data-progress-table>
       <thead>
-        <tr>
+        <tr tabindex="0" data-state="done">
           <th scope="col">Slice</th>
           <th scope="col">State</th>
           <th scope="col">Owner</th>
@@ -215,28 +261,28 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr tabindex="0" data-state="done">
           <td data-label="Slice">Inventory existing skills</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Next action">None.</td>
           <td data-label="Verification">List saved in <code>catalog/tools</code>.</td>
         </tr>
-        <tr>
+        <tr tabindex="0" data-state="active">
           <td data-label="Slice">Create standalone repo</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Next action">Push remote.</td>
           <td data-label="Verification">README, templates, and verifier present.</td>
         </tr>
-        <tr>
+        <tr tabindex="0" data-state="waiting">
           <td data-label="Slice">Catalog wiring</td>
           <td data-label="State"><span class="state active">active</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Next action">Add JSON entry and run manager validation.</td>
           <td data-label="Verification">Pending <code>./bin/orca tools</code>.</td>
         </tr>
-        <tr>
+        <tr tabindex="0" data-state="blocked">
           <td data-label="Slice">User review</td>
           <td data-label="State"><span class="state waiting">waiting</span></td>
           <td data-label="Owner">user</td>
@@ -253,6 +299,53 @@
       </tbody>
     </table>
   </main>
+  <script>
+    (() => {
+      const rows = [...document.querySelectorAll("[data-progress-table] tbody tr")];
+      const buttons = [...document.querySelectorAll("[data-filter]")];
+      const copyButton = document.querySelector("[data-copy-summary]");
+      const copyState = document.querySelector("[data-copy-state]");
+      const copyText = async (text) => {
+        if (navigator.clipboard) {
+          try {
+            await navigator.clipboard.writeText(text);
+            return;
+          } catch (_) {}
+        }
+        const area = document.createElement("textarea");
+        area.value = text;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      };
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const filter = button.dataset.filter;
+          buttons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+          rows.forEach((row) => row.classList.toggle("is-muted", filter !== "all" && row.dataset.state !== filter));
+        });
+      });
+
+      rows.forEach((row) => {
+        row.addEventListener("click", () => {
+          rows.forEach((item) => item.classList.remove("is-focused"));
+          row.classList.add("is-focused");
+        });
+      });
+
+      copyButton.addEventListener("click", async () => {
+        const visible = rows.filter((row) => !row.classList.contains("is-muted"));
+        const text = visible.map((row) => {
+          const cells = [...row.querySelectorAll("td")].map((cell) => cell.innerText.trim().replace(/\s+/g, " "));
+          return `${cells[0]}: ${cells[1]} | next: ${cells[3]} | verification: ${cells[4]}`;
+        }).join("\n");
+        await copyText(text);
+        copyState.textContent = "Copied";
+        setTimeout(() => { copyState.textContent = ""; }, 1800);
+      });
+    })();
+  </script>
 </body>
 </html>
-
