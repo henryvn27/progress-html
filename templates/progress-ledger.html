@@ -111,6 +111,35 @@
       font-size: 18px;
     }
 
+    .progress-meter {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 14px 16px;
+      margin: -8px 0 22px;
+    }
+
+    .progress-meter header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0;
+      margin: 0 0 10px;
+      border: 0;
+    }
+
+    .progress-track {
+      height: 12px;
+      border: 1px solid var(--line);
+      background: #efebe1;
+    }
+
+    .progress-fill {
+      display: block;
+      height: 100%;
+      width: 50%;
+      background: var(--active);
+    }
+
     .log {
       border: 1px solid var(--line);
       background: var(--panel);
@@ -261,6 +290,16 @@
       <div>
         <span class="label">Done</span>
         <span class="value">3 of 6</span>
+      </div>
+    </section>
+
+    <section class="progress-meter" aria-labelledby="progress-label">
+      <header>
+        <span class="label" id="progress-label">Overall progress</span>
+        <strong>3 of 6 slices done</strong>
+      </header>
+      <div class="progress-track" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="Overall progress: 50 percent">
+        <span class="progress-fill"></span>
       </div>
     </section>
 

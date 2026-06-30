@@ -8,6 +8,7 @@ TEMPLATES = Dir[File.join(ROOT, "templates", "*.html")].sort
 REQUIRED_TEXT = [
   "progress.html",
   "Do next",
+  "progressbar",
   "Latest update",
   "Slice",
   "State",
