@@ -66,6 +66,37 @@
       min-height: 76px;
     }
 
+    .next-action {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      border: 2px solid var(--ink);
+      background: #efebe1;
+      padding: 16px;
+      margin: 0 0 22px;
+    }
+
+    .next-action h2 {
+      margin: 0 0 6px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .next-action p {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 750;
+      line-height: 1.25;
+    }
+
+    .next-action small {
+      display: block;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
     .label {
       display: block;
       color: var(--muted);
@@ -189,6 +220,7 @@
     @media (max-width: 760px) {
       main { padding: 22px 14px 36px; }
       .summary { grid-template-columns: 1fr; }
+      .next-action { grid-template-columns: 1fr; }
       table, thead, tbody, tr, th, td { display: block; }
       thead { display: none; }
       tr { border-bottom: 1px solid var(--line); }
@@ -232,6 +264,15 @@
       </div>
     </section>
 
+    <section class="next-action" aria-labelledby="do-next">
+      <div>
+        <h2 id="do-next">Do next</h2>
+        <p>Add the catalog JSON entry and run manager validation.</p>
+        <small>Owner: agent | Evidence expected: <code>./bin/orca tools</code> lists the tool.</small>
+      </div>
+      <button type="button" data-jump-next>Show active slice</button>
+    </section>
+
     <section class="log" aria-labelledby="latest-update">
       <h2 id="latest-update">Latest update</h2>
       <ol>
@@ -252,7 +293,7 @@
     </div>
     <table data-progress-table>
       <thead>
-        <tr tabindex="0" data-state="done">
+        <tr>
           <th scope="col">Slice</th>
           <th scope="col">State</th>
           <th scope="col">Owner</th>
@@ -268,28 +309,28 @@
           <td data-label="Next action">None.</td>
           <td data-label="Verification">List saved in <code>catalog/tools</code>.</td>
         </tr>
-        <tr tabindex="0" data-state="active">
+        <tr tabindex="0" data-state="done">
           <td data-label="Slice">Create standalone repo</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Next action">Push remote.</td>
           <td data-label="Verification">README, templates, and verifier present.</td>
         </tr>
-        <tr tabindex="0" data-state="waiting">
+        <tr tabindex="0" data-state="active">
           <td data-label="Slice">Catalog wiring</td>
           <td data-label="State"><span class="state active">active</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Next action">Add JSON entry and run manager validation.</td>
           <td data-label="Verification">Pending <code>./bin/orca tools</code>.</td>
         </tr>
-        <tr tabindex="0" data-state="blocked">
+        <tr tabindex="0" data-state="waiting">
           <td data-label="Slice">User review</td>
           <td data-label="State"><span class="state waiting">waiting</span></td>
           <td data-label="Owner">user</td>
           <td data-label="Next action">Choose preferred template direction.</td>
           <td data-label="Verification">Feedback captured in issue tracker.</td>
         </tr>
-        <tr>
+        <tr tabindex="0" data-state="blocked">
           <td data-label="Slice">Publish release</td>
           <td data-label="State"><span class="state blocked">blocked</span></td>
           <td data-label="Owner">agent</td>
@@ -305,6 +346,7 @@
       const buttons = [...document.querySelectorAll("[data-filter]")];
       const copyButton = document.querySelector("[data-copy-summary]");
       const copyState = document.querySelector("[data-copy-state]");
+      const jumpNext = document.querySelector("[data-jump-next]");
       const copyText = async (text) => {
         if (navigator.clipboard) {
           try {
@@ -333,6 +375,13 @@
           rows.forEach((item) => item.classList.remove("is-focused"));
           row.classList.add("is-focused");
         });
+      });
+
+      jumpNext.addEventListener("click", () => {
+        const active = rows.find((row) => row.dataset.state === "active");
+        active?.scrollIntoView({ behavior: "smooth", block: "center" });
+        active?.focus();
+        active?.click();
       });
 
       copyButton.addEventListener("click", async () => {
