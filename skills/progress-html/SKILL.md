@@ -5,7 +5,7 @@ Use this skill when the user wants a visible `progress.html` tracker, or when a 
 ## Behavior
 
 1. Locate `progress.html`.
-2. If it does not exist, create it from one of the templates in `templates/` only when the user asked for visible progress.
+2. If it does not exist, create it with `bin/progress-html init --template ledger|rail|board` when available, otherwise copy one of the templates in `templates/` only when the user asked for visible progress.
 3. Update it whenever slice or chunk state changes.
 4. Periodically compare it to the current plan.
 5. Before final response, make sure the file is current.

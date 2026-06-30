@@ -136,7 +136,7 @@
     .progress-fill {
       display: block;
       height: 100%;
-      width: 91%;
+      width: 50%;
       background: var(--active);
     }
 
@@ -264,41 +264,83 @@
         margin-bottom: 2px;
       }
     }
-  </style>
+  
+:root {
+  --paper: #f0f5f0;
+  --bg: #f3f7f3;
+  --panel: #fcfdfc;
+  --soft: #e1eae2;
+  --head: #dbe6dc;
+  --line: #b8ccba;
+  --active: #135d66;
+}
+
+.project-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.project-logo {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 6px;
+}
+
+.project-logo-fallback {
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  background: var(--active);
+  color: var(--panel);
+  font-weight: 800;
+}
+
+.project-name {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 2px 0 0;
+}
+</style>
 </head>
 <body>
   <main>
     <header>
-      <h1>progress.html</h1>
-      <p class="meta">Project: Progress HTML tool | Last updated: 2026-06-30 12:28 ET</p>
-      <p class="note">Visible status for the standalone Progress HTML repo. Update this file when slices change state.</p>
+      <div class="project-brand"><span class="project-logo project-logo-fallback" aria-hidden="true">P</span><div><h1>progress.html</h1><p class="project-name">Progress Html</p></div></div>
+      <p class="meta">Project: Example migration | Last updated: 2026-06-30 14:15 ET</p>
+      <p class="note">Agent-maintained visible progress for slices and chunks. Update this file when state changes.</p>
     </header>
 
     <section class="summary" aria-label="Current progress summary">
       <div>
         <span class="label">Current goal</span>
-        <span class="value">Implement Progress HTML across standalone tool repos.</span>
+        <span class="value">Split the work into standalone tools and wire the manager catalog.</span>
       </div>
       <div>
         <span class="label">Active slice</span>
-        <span class="value">User review</span>
+        <span class="value">Catalog wiring</span>
       </div>
       <div>
         <span class="label">Open blockers</span>
-        <span class="value">0</span>
+        <span class="value">1</span>
       </div>
       <div>
         <span class="label">Done</span>
-        <span class="value">10 of 11</span>
+        <span class="value">3 of 6</span>
       </div>
     </section>
 
     <section class="progress-meter" aria-labelledby="progress-label">
       <header>
         <span class="label" id="progress-label">Overall progress</span>
-        <strong>10 of 11 slices done</strong>
+        <strong>3 of 6 slices done</strong>
       </header>
-      <div class="progress-track" role="progressbar" aria-valuenow="91" aria-valuemin="0" aria-valuemax="100" aria-label="Overall progress: 91 percent">
+      <div class="progress-track" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="Overall progress: 50 percent">
         <span class="progress-fill"></span>
       </div>
     </section>
@@ -306,8 +348,8 @@
     <section class="next-action" aria-labelledby="do-next">
       <div>
         <h2 id="do-next">Do next</h2>
-        <p>Review the installed root progress.html files in the tool repos.</p>
-        <small>Owner: user | Evidence expected: feedback on whether the installed status pages are useful.</small>
+        <p>Add the catalog JSON entry and run manager validation.</p>
+        <small>Owner: agent | Evidence expected: <code>./bin/orca tools</code> lists the tool.</small>
       </div>
       <button type="button" data-jump-next>Show active slice</button>
     </section>
@@ -315,12 +357,8 @@
     <section class="log" aria-labelledby="latest-update">
       <h2 id="latest-update">Latest update</h2>
       <ol>
-        <li><strong>12:28</strong> Installed root <code>progress.html</code> and README lifecycle rules across 20 standalone tool repos.</li>
-        <li><strong>12:08</strong> Added explicit updated timestamps to template slices and the root tracker.</li>
-        <li><strong>12:03</strong> Added an install prompt for Codex or Claude Code to apply Progress HTML across tool repos.</li>
-        <li><strong>11:58</strong> Created root <code>progress.html</code> from the ledger template and rewrote it for this repo.</li>
-        <li><strong>11:55</strong> Added the prominent <strong>Do next</strong> section to all shipped templates.</li>
-        <li><strong>11:49</strong> Added integration recipes for goal runner, GitHub flow, QA, Notion, orchestration, and learning sidecar.</li>
+        <li><strong>14:15</strong> Verification found one missing catalog entry. Next action: add the tool metadata and rerun validation.</li>
+        <li><strong>13:42</strong> Built the first standalone repo skeleton and wrote the install notes.</li>
       </ol>
     </section>
 
@@ -347,84 +385,44 @@
       </thead>
       <tbody>
         <tr tabindex="0" data-state="done">
-          <td data-label="Slice">Standalone tool repo</td>
+          <td data-label="Slice">Inventory existing skills</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
-          <td data-label="Updated"><time datetime="2026-06-30T11:30:00-04:00">2026-06-30 11:30 ET</time></td>
+          <td data-label="Updated"><time datetime="2026-06-30T13:05:00-04:00">2026-06-30 13:05 ET</time></td>
           <td data-label="Next action">None.</td>
-          <td data-label="Verification">Repo exists at <code>henryvn27/progress-html</code>.</td>
+          <td data-label="Verification">List saved in <code>catalog/tools</code>.</td>
         </tr>
         <tr tabindex="0" data-state="done">
-          <td data-label="Slice">Template set</td>
+          <td data-label="Slice">Create standalone repo</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
-          <td data-label="Updated"><time datetime="2026-06-30T11:36:00-04:00">2026-06-30 11:36 ET</time></td>
-          <td data-label="Next action">None.</td>
-          <td data-label="Verification">Ledger, rail, and board templates exist in <code>templates/</code>.</td>
-        </tr>
-        <tr tabindex="0" data-state="done">
-          <td data-label="Slice">Tool integrations</td>
-          <td data-label="State"><span class="state done">done</span></td>
-          <td data-label="Owner">agent</td>
-          <td data-label="Updated"><time datetime="2026-06-30T11:49:00-04:00">2026-06-30 11:49 ET</time></td>
-          <td data-label="Next action">None.</td>
-          <td data-label="Verification"><code>docs/integrations.md</code> and <code>examples/</code> document wiring.</td>
-        </tr>
-        <tr tabindex="0" data-state="done">
-          <td data-label="Slice">Clear next action UI</td>
-          <td data-label="State"><span class="state done">done</span></td>
-          <td data-label="Owner">user</td>
-          <td data-label="Updated"><time datetime="2026-06-30T11:55:00-04:00">2026-06-30 11:55 ET</time></td>
-          <td data-label="Next action">Refresh the template tab and review the Do next block.</td>
-          <td data-label="Verification">Merged in PR #3.</td>
-        </tr>
-        <tr tabindex="0" data-state="done">
-          <td data-label="Slice">Create root tracker</td>
-          <td data-label="State"><span class="state done">done</span></td>
-          <td data-label="Owner">agent</td>
-          <td data-label="Updated"><time datetime="2026-06-30T11:58:00-04:00">2026-06-30 11:58 ET</time></td>
-          <td data-label="Next action">Keep it updated during future repo work.</td>
-          <td data-label="Verification">Merged in PR #4.</td>
-        </tr>
-        <tr tabindex="0" data-state="done">
-          <td data-label="Slice">Progress bars</td>
-          <td data-label="State"><span class="state done">done</span></td>
-          <td data-label="Owner">agent</td>
-          <td data-label="Updated"><time datetime="2026-06-30T11:57:00-04:00">2026-06-30 11:57 ET</time></td>
-          <td data-label="Next action">None.</td>
-          <td data-label="Verification">Merged in PR #5.</td>
-        </tr>
-        <tr tabindex="0" data-state="done">
-          <td data-label="Slice">Install prompt</td>
-          <td data-label="State"><span class="state done">done</span></td>
-          <td data-label="Owner">agent</td>
-          <td data-label="Updated"><time datetime="2026-06-30T12:03:00-04:00">2026-06-30 12:03 ET</time></td>
-          <td data-label="Next action">Use it when applying the tool across repos.</td>
-          <td data-label="Verification">Merged in PR #6.</td>
-        </tr>
-        <tr tabindex="0" data-state="done">
-          <td data-label="Slice">Timestamp fields</td>
-          <td data-label="State"><span class="state done">done</span></td>
-          <td data-label="Owner">agent</td>
-          <td data-label="Updated"><time datetime="2026-06-30T12:08:00-04:00">2026-06-30 12:08 ET</time></td>
-          <td data-label="Next action">Keep timestamps current when slices change.</td>
-          <td data-label="Verification">Merged in PR #7.</td>
-        </tr>
-        <tr tabindex="0" data-state="done">
-          <td data-label="Slice">Install across tool repos</td>
-          <td data-label="State"><span class="state done">done</span></td>
-          <td data-label="Owner">agent</td>
-          <td data-label="Updated"><time datetime="2026-06-30T12:28:00-04:00">2026-06-30 12:28 ET</time></td>
-          <td data-label="Next action">Use the installed trackers during future tool work.</td>
-          <td data-label="Verification">20 repo PRs merged to <code>main</code>.</td>
+          <td data-label="Updated"><time datetime="2026-06-30T13:42:00-04:00">2026-06-30 13:42 ET</time></td>
+          <td data-label="Next action">Push remote.</td>
+          <td data-label="Verification">README, templates, and verifier present.</td>
         </tr>
         <tr tabindex="0" data-state="active">
-          <td data-label="Slice">User review</td>
+          <td data-label="Slice">Catalog wiring</td>
           <td data-label="State"><span class="state active">active</span></td>
+          <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T14:15:00-04:00">2026-06-30 14:15 ET</time></td>
+          <td data-label="Next action">Add JSON entry and run manager validation.</td>
+          <td data-label="Verification">Pending <code>./bin/orca tools</code>.</td>
+        </tr>
+        <tr tabindex="0" data-state="waiting">
+          <td data-label="Slice">User review</td>
+          <td data-label="State"><span class="state waiting">waiting</span></td>
           <td data-label="Owner">user</td>
-          <td data-label="Updated"><time datetime="2026-06-30T12:28:00-04:00">2026-06-30 12:28 ET</time></td>
-          <td data-label="Next action">Open root <code>progress.html</code> and check whether the visible status is useful.</td>
-          <td data-label="Verification">User feedback.</td>
+          <td data-label="Updated"><time datetime="2026-06-30T14:00:00-04:00">2026-06-30 14:00 ET</time></td>
+          <td data-label="Next action">Choose preferred template direction.</td>
+          <td data-label="Verification">Feedback captured in issue tracker.</td>
+        </tr>
+        <tr tabindex="0" data-state="blocked">
+          <td data-label="Slice">Publish release</td>
+          <td data-label="State"><span class="state blocked">blocked</span></td>
+          <td data-label="Owner">agent</td>
+          <td data-label="Updated"><time datetime="2026-06-30T14:12:00-04:00">2026-06-30 14:12 ET</time></td>
+          <td data-label="Next action">Wait for repo creation permission if GitHub rejects create.</td>
+          <td data-label="Verification">Remote URL reachable.</td>
         </tr>
       </tbody>
     </table>

@@ -23,6 +23,7 @@ Process:
 2. Skip repos with unrelated dirty work unless the dirty work is clearly the active Progress HTML install.
 3. For each clean tool repo:
    - If `progress.html` is missing, copy the best template to `progress.html`.
+   - Prefer `bin/progress-html init --template ledger|rail|board` when available so the generated file picks up the repo name, colors, and local logo/icon automatically.
    - Rewrite example content so it describes that repo's real current state.
    - Keep a clear `Do next` block near the top.
    - Keep the accessible progress bar.
@@ -46,4 +47,3 @@ Process:
 Install rule for future repos:
 When creating or extracting a new standalone tool repo, create root `progress.html` during repo setup. It should show the current goal, Do next, progress bar, latest update, all slices/chunks, state labels, owner, next action, and verification evidence. Agents must update it directly at lifecycle checkpoints. No hooks, watchers, daemons, or wrappers.
 ```
-

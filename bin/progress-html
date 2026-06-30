@@ -2,6 +2,11 @@
 # frozen_string_literal: true
 
 require "fileutils"
+require "cgi"
+require "digest"
+require "find"
+require "json"
+require "pathname"
 
 ROOT = File.expand_path("..", __dir__)
 TEMPLATES = {
@@ -13,6 +18,140 @@ TEMPLATES = {
 def usage
   warn "usage: progress-html init --template ledger|rail|board [--target progress.html]"
   exit 1
+end
+
+def project_name(root)
+  package = File.join(root, "package.json")
+  if File.exist?(package)
+    name = JSON.parse(File.read(package))["name"] rescue nil
+    return name.split("/").last.tr("-_", " ").split.map(&:capitalize).join(" ") if name && !name.empty?
+  end
+
+  pyproject = File.join(root, "pyproject.toml")
+  if File.exist?(pyproject)
+    name = File.read(pyproject)[/^\s*name\s*=\s*["']([^"']+)["']/, 1]
+    return name.tr("-_", " ").split.map(&:capitalize).join(" ") if name
+  end
+
+  File.basename(root).tr("-_", " ").split.map(&:capitalize).join(" ")
+end
+
+def logo_path(root, target)
+  names = /(app-?icon|favicon|logo|mark|icon)/i
+  exts = /\.(svg|png|jpe?g|webp|ico)$/i
+  skip = %r{/(node_modules|\.git|vendor|dist|build|coverage)/}
+
+  found = nil
+  Find.find(root) do |path|
+    Find.prune if path.match?(skip)
+    next unless File.file?(path)
+    next unless File.basename(path).match?(names) && path.match?(exts)
+
+    found = path
+    break
+  end
+  return nil unless found
+
+  Pathname.new(found).relative_path_from(Pathname.new(File.dirname(File.expand_path(target)))).to_s
+end
+
+def hsl_to_hex(h, s, l)
+  c = (1 - (2 * l - 1).abs) * s
+  x = c * (1 - ((h / 60.0) % 2 - 1).abs)
+  m = l - c / 2
+  rgb = case h
+        when 0...60 then [c, x, 0]
+        when 60...120 then [x, c, 0]
+        when 120...180 then [0, c, x]
+        when 180...240 then [0, x, c]
+        when 240...300 then [x, 0, c]
+        else [c, 0, x]
+        end
+  "#%02x%02x%02x" % rgb.map { |v| ((v + m) * 255).round }
+end
+
+def accent_color(root, name, target)
+  counts = Hash.new(0)
+  skip = %r{/(node_modules|\.git|vendor|dist|build|coverage)/}
+  target_path = File.expand_path(target)
+  Find.find(root) do |path|
+    Find.prune if path.match?(skip)
+    next unless File.file?(path)
+    next if File.expand_path(path) == target_path
+    next unless path.match?(/\.(css|scss|sass|html|js|jsx|ts|tsx|vue|svelte|json|md)$/i)
+
+    File.read(path, 300_000).scan(/#(?:[0-9a-fA-F]{6})\b/) do |hex|
+      r, g, b = hex[1, 6].scan(/../).map { |part| part.to_i(16) }
+      next if [r, g, b].max - [r, g, b].min < 24
+      next if [r, g, b].sum > 690 || [r, g, b].sum < 90
+
+      counts[hex.downcase] += 1
+    end
+  rescue ArgumentError
+    next
+  end
+
+  counts.max_by { |_, count| count }&.first || hsl_to_hex(Digest::MD5.hexdigest(name).to_i(16) % 360, 0.48, 0.33)
+end
+
+def themed_html(html, root, target)
+  name = project_name(root)
+  accent = accent_color(root, name, target)
+  hue = Digest::MD5.hexdigest(accent).to_i(16) % 360
+  logo = logo_path(root, target)
+  mark = if logo
+           %(<img class="project-logo" src="#{CGI.escapeHTML(logo)}" alt="#{CGI.escapeHTML(name)} logo">)
+         else
+           %(<span class="project-logo project-logo-fallback" aria-hidden="true">#{CGI.escapeHTML(name[0].to_s.upcase)}</span>)
+         end
+
+  css = <<~CSS
+
+    :root {
+      --paper: #{hsl_to_hex(hue, 0.18, 0.95)};
+      --bg: #{hsl_to_hex(hue, 0.18, 0.96)};
+      --panel: #{hsl_to_hex(hue, 0.10, 0.99)};
+      --soft: #{hsl_to_hex(hue, 0.18, 0.90)};
+      --head: #{hsl_to_hex(hue, 0.18, 0.88)};
+      --line: #{hsl_to_hex(hue, 0.16, 0.76)};
+      --active: #{accent};
+    }
+
+    .project-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .project-logo {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 6px;
+    }
+
+    .project-logo-fallback {
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      background: var(--active);
+      color: var(--panel);
+      font-weight: 800;
+    }
+
+    .project-name {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 2px 0 0;
+    }
+  CSS
+
+  html = html.sub("</style>", "#{css}</style>")
+  html.sub("<h1>progress.html</h1>", %(<div class="project-brand">#{mark}<div><h1>progress.html</h1><p class="project-name">#{CGI.escapeHTML(name)}</p></div></div>))
 end
 
 cmd = ARGV.shift
@@ -36,6 +175,7 @@ end
 file = TEMPLATES.fetch(template) { usage }
 source = File.join(ROOT, "templates", file)
 FileUtils.cp(source, target)
+File.write(target, themed_html(File.read(target), Dir.pwd, target))
 puts "created #{target} from #{file}"
+puts "themed #{target} from local project name, colors, and icon/logo when found"
 puts "update #{target} whenever a slice or chunk changes state"
-

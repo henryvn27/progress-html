@@ -18,6 +18,8 @@ Agents update `progress.html` directly whenever they finish or change a meaningf
 
 All templates are static HTML with inline CSS and inline JavaScript. No external dependencies.
 
+When created with `bin/progress-html init`, the generated file is automatically personalized from the target repo's project name, existing color tokens, and the first local logo/icon asset it can find.
+
 ## Agent Rule
 
 Use [docs/agent-instructions.md](docs/agent-instructions.md). The rule is simple: update `progress.html` when slice state changes, then offer the user the file path or link.
