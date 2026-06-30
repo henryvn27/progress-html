@@ -10,6 +10,7 @@
   "verify": "ruby scripts/verify.rb",
   "dependencies": [],
   "conflicts": [],
-  "provides": ["progress-html-template", "agent-update-instructions", "slice-status-dashboard"],
+  "provides": ["progress-html-template", "agent-update-instructions", "slice-status-dashboard", "goal-progress-surface", "tool-integration-recipes"],
+  "integrates_with": ["orca-goal-runner", "agent-orchestration-kit", "github-flow-manager", "qa-review-kit", "orca-notion-bridge", "learning-sidecar"],
   "license": "MIT"
 }
