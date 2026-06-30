@@ -61,6 +61,36 @@
       padding: 12px;
     }
 
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 0 0 16px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      padding: 7px 10px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    button[aria-pressed="true"] {
+      border-color: var(--ink);
+      background: var(--head);
+      font-weight: 700;
+    }
+
+    button:focus-visible, article:focus-visible {
+      outline: 2px solid var(--active);
+      outline-offset: 2px;
+    }
+
     .label {
       display: block;
       margin-bottom: 4px;
@@ -112,6 +142,10 @@
       letter-spacing: .08em;
     }
 
+    .column.is-collapsed .items {
+      display: none;
+    }
+
     .items {
       display: grid;
       gap: 1px;
@@ -122,6 +156,14 @@
       background: var(--panel);
       padding: 12px;
       min-height: 150px;
+    }
+
+    article.is-muted {
+      display: none;
+    }
+
+    article.is-focused {
+      background: #f0efe8;
     }
 
     h3 {
@@ -167,6 +209,11 @@
       padding: 1px 4px;
     }
 
+    .copied {
+      color: var(--done);
+      font-size: 13px;
+    }
+
     @media (max-width: 980px) {
       .board, .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
@@ -199,11 +246,22 @@
       <div><span class="label">Verification</span><strong>pending</strong></div>
     </section>
 
+    <div class="toolbar" aria-label="Board controls">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="active">Active</button>
+      <button type="button" data-filter="queued">Queued</button>
+      <button type="button" data-filter="waiting">Waiting</button>
+      <button type="button" data-filter="done">Done</button>
+      <button type="button" data-toggle-columns aria-pressed="false">Collapse done</button>
+      <button type="button" data-copy-summary>Copy summary</button>
+      <span class="copied" data-copy-state aria-live="polite"></span>
+    </div>
+
     <section class="board" aria-label="Slice board">
-      <div class="column">
+      <div class="column" data-column="active">
         <h2>Now</h2>
         <div class="items">
-      <article>
+      <article tabindex="0" data-state="active">
         <span class="state active">active</span>
         <h3>Manager catalog entry</h3>
         <p>Add the tool JSON so it is referenceable by the overall manager.</p>
@@ -214,7 +272,7 @@
           <dt>Verification</dt><dd>Tool appears in catalog output.</dd>
         </dl>
           </article>
-          <article>
+          <article tabindex="0" data-state="active">
             <span class="state active">active</span>
         <h3>Standalone repo push</h3>
         <p>Create the remote repository and push the first clean commit.</p>
@@ -228,10 +286,10 @@
         </div>
       </div>
 
-      <div class="column">
+      <div class="column" data-column="queued">
         <h2>Next</h2>
         <div class="items">
-          <article>
+          <article tabindex="0" data-state="queued">
             <span class="state next">queued</span>
         <h3>Install instructions</h3>
         <p>Confirm the README has a direct copy path and no hook setup.</p>
@@ -245,10 +303,10 @@
         </div>
       </div>
 
-      <div class="column">
+      <div class="column" data-column="waiting">
         <h2>Waiting</h2>
         <div class="items">
-          <article>
+          <article tabindex="0" data-state="waiting">
             <span class="state waiting">waiting</span>
         <h3>Template selection</h3>
         <p>User reviews ledger, rail, and board variants for taste and function.</p>
@@ -262,10 +320,10 @@
         </div>
       </div>
 
-      <div class="column">
+      <div class="column" data-column="done">
         <h2>Done</h2>
         <div class="items">
-          <article>
+          <article tabindex="0" data-state="done">
             <span class="state done">done</span>
         <h3>Research pass</h3>
         <p>Captured practical rules for non-decorative, accessible progress status UI.</p>
@@ -276,7 +334,7 @@
           <dt>Verification</dt><dd>Notes saved in <code>docs/research.md</code>.</dd>
         </dl>
           </article>
-          <article>
+          <article tabindex="0" data-state="done">
             <span class="state done">done</span>
         <h3>Agent update rule</h3>
         <p>Instructions specify direct file updates after each meaningful state change.</p>
@@ -291,5 +349,62 @@
       </div>
     </section>
   </main>
+  <script>
+    (() => {
+      const cards = [...document.querySelectorAll("article[data-state]")];
+      const filters = [...document.querySelectorAll("[data-filter]")];
+      const copyButton = document.querySelector("[data-copy-summary]");
+      const copyState = document.querySelector("[data-copy-state]");
+      const toggleColumns = document.querySelector("[data-toggle-columns]");
+      const doneColumn = document.querySelector("[data-column='done']");
+      const copyText = async (text) => {
+        if (navigator.clipboard) {
+          try {
+            await navigator.clipboard.writeText(text);
+            return;
+          } catch (_) {}
+        }
+        const area = document.createElement("textarea");
+        area.value = text;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      };
+
+      filters.forEach((button) => {
+        button.addEventListener("click", () => {
+          const filter = button.dataset.filter;
+          filters.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+          cards.forEach((card) => card.classList.toggle("is-muted", filter !== "all" && card.dataset.state !== filter));
+        });
+      });
+
+      cards.forEach((card) => {
+        card.addEventListener("click", () => {
+          cards.forEach((item) => item.classList.remove("is-focused"));
+          card.classList.add("is-focused");
+        });
+      });
+
+      toggleColumns.addEventListener("click", () => {
+        const collapsed = doneColumn.classList.toggle("is-collapsed");
+        toggleColumns.setAttribute("aria-pressed", String(collapsed));
+        toggleColumns.textContent = collapsed ? "Show done" : "Collapse done";
+      });
+
+      copyButton.addEventListener("click", async () => {
+        const text = cards.filter((card) => !card.classList.contains("is-muted")).map((card) => {
+          const title = card.querySelector("h3").innerText.trim();
+          const state = card.dataset.state;
+          const verification = [...card.querySelectorAll("dt")].find((dt) => dt.innerText.trim() === "Verification")?.nextElementSibling?.innerText.trim();
+          return `${title}: ${state} | verification: ${verification}`;
+        }).join("\n");
+        await copyText(text);
+        copyState.textContent = "Copied";
+        setTimeout(() => { copyState.textContent = ""; }, 1800);
+      });
+    })();
+  </script>
 </body>
 </html>

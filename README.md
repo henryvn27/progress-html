@@ -16,7 +16,7 @@ Agents update `progress.html` directly whenever they finish or change a meaningf
 - [Template B: Rail](templates/progress-rail.html), vertical slice rail with clear current state.
 - [Template C: Board](templates/progress-board.html), compact chunk board grouped by state.
 
-All templates are static HTML with inline CSS. No external dependencies.
+All templates are static HTML with inline CSS and inline JavaScript. No external dependencies.
 
 ## Agent Rule
 

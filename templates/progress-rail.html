@@ -75,6 +75,36 @@
 
     .status-strip div:last-child { border-right: 0; }
 
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 0 0 18px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      padding: 7px 10px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    button[aria-pressed="true"] {
+      border-color: var(--ink);
+      background: var(--soft);
+      font-weight: 700;
+    }
+
+    button:focus-visible, .slice:focus-visible {
+      outline: 2px solid var(--active);
+      outline-offset: 2px;
+    }
+
     .label {
       display: block;
       color: var(--muted);
@@ -94,6 +124,21 @@
     .slice {
       position: relative;
       padding: 0 0 28px;
+    }
+
+    .slice.is-current h2 {
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 5px;
+    }
+
+    .slice.is-hidden {
+      display: none;
+    }
+
+    .rail.compact .slice.done .details,
+    .rail.compact .slice.done p {
+      display: none;
     }
 
     .slice::before {
@@ -160,6 +205,11 @@
       margin: 0 0 8px;
     }
 
+    .copied {
+      color: var(--done);
+      font-size: 13px;
+    }
+
     @media (max-width: 720px) {
       header, .details, .status-strip { grid-template-columns: 1fr; }
       .status-strip div { border-right: 0; border-bottom: 1px solid var(--line); }
@@ -191,8 +241,18 @@
       <p>Template C is being checked for responsive layout and text state labels. Next: run the verifier and publish the repo.</p>
     </section>
 
-    <section class="rail" aria-label="Slice rail">
-      <article class="slice done">
+    <div class="toolbar" aria-label="Rail controls">
+      <button type="button" data-jump="active">Jump to active</button>
+      <button type="button" data-toggle-done aria-pressed="false">Hide done detail</button>
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="waiting">Waiting</button>
+      <button type="button" data-filter="blocked">Blocked</button>
+      <button type="button" data-copy-summary>Copy summary</button>
+      <span class="copied" data-copy-state aria-live="polite"></span>
+    </div>
+
+    <section class="rail" aria-label="Slice rail" data-rail>
+      <article class="slice done" tabindex="0" data-state="done">
         <h2>1. Define visible progress contract <span class="state">done</span></h2>
         <p class="muted">Progress must show all slices, latest update, blockers, and proof.</p>
         <div class="details">
@@ -201,7 +261,7 @@
         </div>
       </article>
 
-      <article class="slice done">
+      <article class="slice done" tabindex="0" data-state="done">
         <h2>2. Build standalone templates <span class="state">done</span></h2>
         <p class="muted">Ledger, rail, and board variants are present as standalone HTML files.</p>
         <div class="details">
@@ -210,7 +270,7 @@
         </div>
       </article>
 
-      <article class="slice active">
+      <article class="slice active is-current" tabindex="0" data-state="active">
         <h2>3. Wire tool metadata <span class="state">active</span></h2>
         <p class="muted">Add catalog entry and make the tool referenceable by the manager.</p>
         <div class="details">
@@ -219,7 +279,7 @@
         </div>
       </article>
 
-      <article class="slice waiting">
+      <article class="slice waiting" tabindex="0" data-state="waiting">
         <h2>4. User template feedback <span class="state">waiting</span></h2>
         <p class="muted">User reviews all three directions and chooses what to refine.</p>
         <div class="details">
@@ -228,7 +288,7 @@
         </div>
       </article>
 
-      <article class="slice blocked">
+      <article class="slice blocked" tabindex="0" data-state="blocked">
         <h2>5. Release tag <span class="state">blocked</span></h2>
         <p class="muted">Blocked until the remote repository exists and the first push succeeds.</p>
         <div class="details">
@@ -238,6 +298,67 @@
       </article>
     </section>
   </main>
+  <script>
+    (() => {
+      const rail = document.querySelector("[data-rail]");
+      const slices = [...document.querySelectorAll(".slice")];
+      const filters = [...document.querySelectorAll("[data-filter]")];
+      const copyButton = document.querySelector("[data-copy-summary]");
+      const copyState = document.querySelector("[data-copy-state]");
+      const toggleDone = document.querySelector("[data-toggle-done]");
+      const copyText = async (text) => {
+        if (navigator.clipboard) {
+          try {
+            await navigator.clipboard.writeText(text);
+            return;
+          } catch (_) {}
+        }
+        const area = document.createElement("textarea");
+        area.value = text;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      };
+
+      document.querySelector("[data-jump='active']").addEventListener("click", () => {
+        const active = document.querySelector(".slice.active");
+        active?.scrollIntoView({ behavior: "smooth", block: "center" });
+        active?.focus();
+      });
+
+      toggleDone.addEventListener("click", () => {
+        const compact = rail.classList.toggle("compact");
+        toggleDone.setAttribute("aria-pressed", String(compact));
+        toggleDone.textContent = compact ? "Show done detail" : "Hide done detail";
+      });
+
+      filters.forEach((button) => {
+        button.addEventListener("click", () => {
+          const filter = button.dataset.filter;
+          filters.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+          slices.forEach((slice) => slice.classList.toggle("is-hidden", filter !== "all" && slice.dataset.state !== filter));
+        });
+      });
+
+      slices.forEach((slice) => {
+        slice.addEventListener("focus", () => {
+          slices.forEach((item) => item.classList.remove("is-current"));
+          slice.classList.add("is-current");
+        });
+      });
+
+      copyButton.addEventListener("click", async () => {
+        const text = slices.filter((slice) => !slice.classList.contains("is-hidden")).map((slice) => {
+          const title = slice.querySelector("h2").innerText.trim().replace(/\s+/g, " ");
+          const next = [...slice.querySelectorAll(".details p")].map((item) => item.innerText.trim().replace(/\s+/g, " ")).join(" | ");
+          return `${title}: ${next}`;
+        }).join("\n");
+        await copyText(text);
+        copyState.textContent = "Copied";
+        setTimeout(() => { copyState.textContent = ""; }, 1800);
+      });
+    })();
+  </script>
 </body>
 </html>
-
