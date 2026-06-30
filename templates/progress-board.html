@@ -61,6 +61,37 @@
       padding: 12px;
     }
 
+    .next-action {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      border: 2px solid var(--ink);
+      background: var(--head);
+      padding: 16px;
+      margin: 0 0 18px;
+    }
+
+    .next-action h2 {
+      margin: 0 0 6px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .next-action p {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 750;
+      line-height: 1.25;
+    }
+
+    .next-action small {
+      display: block;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
     .toolbar {
       display: flex;
       flex-wrap: wrap;
@@ -222,6 +253,7 @@
       main { padding: 22px 14px 36px; }
       header { display: block; }
       .latest { min-width: 0; max-width: none; margin-top: 14px; }
+      .next-action { grid-template-columns: 1fr; }
       .board, .stats { grid-template-columns: 1fr; }
     }
   </style>
@@ -244,6 +276,15 @@
       <div><span class="label">Active</span><strong>2 chunks</strong></div>
       <div><span class="label">Waiting</span><strong>1 chunk</strong></div>
       <div><span class="label">Verification</span><strong>pending</strong></div>
+    </section>
+
+    <section class="next-action" aria-labelledby="do-next">
+      <div>
+        <h2 id="do-next">Do next</h2>
+        <p>Run the active catalog check, then push the standalone repo.</p>
+        <small>Owner: agent | Evidence expected: tool appears in catalog output and remote URL loads.</small>
+      </div>
+      <button type="button" data-jump-next>Show active chunk</button>
     </section>
 
     <div class="toolbar" aria-label="Board controls">
@@ -357,6 +398,7 @@
       const copyState = document.querySelector("[data-copy-state]");
       const toggleColumns = document.querySelector("[data-toggle-columns]");
       const doneColumn = document.querySelector("[data-column='done']");
+      const jumpNext = document.querySelector("[data-jump-next]");
       const copyText = async (text) => {
         if (navigator.clipboard) {
           try {
@@ -385,6 +427,13 @@
           cards.forEach((item) => item.classList.remove("is-focused"));
           card.classList.add("is-focused");
         });
+      });
+
+      jumpNext.addEventListener("click", () => {
+        const active = cards.find((card) => card.dataset.state === "active");
+        active?.scrollIntoView({ behavior: "smooth", block: "center" });
+        active?.focus();
+        active?.click();
       });
 
       toggleColumns.addEventListener("click", () => {

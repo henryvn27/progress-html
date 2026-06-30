@@ -7,6 +7,7 @@ ROOT = File.expand_path("..", __dir__)
 TEMPLATES = Dir[File.join(ROOT, "templates", "*.html")].sort
 REQUIRED_TEXT = [
   "progress.html",
+  "Do next",
   "Latest update",
   "Slice",
   "State",
