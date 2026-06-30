@@ -29,6 +29,10 @@ Use [docs/integrations.md](docs/integrations.md) when another tool sees an exist
 - `/goal` and goal runner: [examples/goal-runner.md](examples/goal-runner.md)
 - generic tool wiring: [examples/tool-wiring.md](examples/tool-wiring.md)
 
+## Install Prompt
+
+Use [prompts/install-progress-html.md](prompts/install-progress-html.md) to ask Codex or Claude Code to install root `progress.html` files across every standalone tool repo and keep that rule for future tool repos.
+
 ## Verify
 
 ```sh
