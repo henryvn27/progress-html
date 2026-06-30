@@ -35,6 +35,12 @@ Update `progress.html` at these points:
 - when a blocker is proven
 - when the handoff file is written
 
+Timing:
+
+- when a slice starts, add `data-estimate-min`
+- when a slice finishes, add `data-actual-min`
+- keep the original estimate so the learning log can compare estimate vs actual
+
 Suggested slice names:
 
 - Goal contract
@@ -67,6 +73,8 @@ Update `progress.html` when:
 - ownership changes
 - the coordinator changes phase
 - a resume note is written
+
+When a worker accepts a slice, record its estimate. When it finishes, record the actual duration. The page uses those pairs to improve future remaining-time estimates.
 
 Suggested slice names:
 
@@ -153,7 +161,7 @@ Use `progress.html` as teaching context:
 Add this to another tool's instructions:
 
 ```text
-If `progress.html` exists in the target repo, update it at each lifecycle checkpoint. Keep it user-visible: current slice, state, next action, blocker if any, and verification evidence. Do not install hooks or start a watcher.
+If `progress.html` exists in the target repo, update it at each lifecycle checkpoint. Keep it user-visible: current slice, state, next action, blocker if any, time estimate, actual duration when done, and verification evidence. Do not install hooks or start a watcher.
 ```
 
 For bulk installation across tool repos, use [../prompts/install-progress-html.md](../prompts/install-progress-html.md).

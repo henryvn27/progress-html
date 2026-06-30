@@ -18,6 +18,8 @@ The template is static HTML with inline CSS and inline JavaScript. No external d
 
 When created with `bin/progress-html init`, the generated file is automatically personalized from the target repo's project name, existing color tokens, and the first local logo/icon asset it can find.
 
+The ledger also tracks time estimates. Agents keep the original estimate and add actual duration when a slice finishes; the page uses those pairs to calculate a learned remaining-time estimate.
+
 ## Agent Rule
 
 Use [docs/agent-instructions.md](docs/agent-instructions.md). The rule is simple: update `progress.html` when slice state changes, then offer the user the file path or link.

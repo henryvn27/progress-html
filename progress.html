@@ -174,6 +174,26 @@
       background: var(--active);
     }
 
+    .time-panel {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+      margin: -8px 0 22px;
+    }
+
+    .time-panel > div {
+      background: var(--panel);
+      padding: 14px 16px;
+    }
+
+    .time-panel strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1.15;
+    }
+
     .log {
       border: 1px solid var(--line);
       background: var(--panel);
@@ -230,6 +250,7 @@
       border-collapse: collapse;
       background: var(--panel);
       border: 1px solid var(--line);
+      margin-bottom: 22px;
     }
 
     th, td {
@@ -298,7 +319,7 @@
 
     @media (max-width: 760px) {
       main { padding: 22px 14px 36px; }
-      .summary, .status-key { grid-template-columns: 1fr; }
+      .summary, .status-key, .time-panel { grid-template-columns: 1fr; }
       .next-action { grid-template-columns: 1fr; }
       table, thead, tbody, tr, th, td { display: block; }
       thead { display: none; }
@@ -404,6 +425,25 @@
       </div>
     </section>
 
+    <section class="time-panel" aria-label="Time estimate summary">
+      <div>
+        <span class="label">Time remaining</span>
+        <strong data-time-remaining>Calculating</strong>
+      </div>
+      <div>
+        <span class="label">Original open estimate</span>
+        <strong data-time-original>Calculating</strong>
+      </div>
+      <div>
+        <span class="label">Learned multiplier</span>
+        <strong data-time-multiplier>Calculating</strong>
+      </div>
+      <div>
+        <span class="label">Completed sample</span>
+        <strong data-time-sample>Calculating</strong>
+      </div>
+    </section>
+
     <section class="next-action" aria-labelledby="do-next">
       <div>
         <h2 id="do-next">Do next</h2>
@@ -440,68 +480,97 @@
           <th scope="col">State</th>
           <th scope="col">Owner</th>
           <th scope="col">Updated</th>
+          <th scope="col">Estimate</th>
+          <th scope="col">Actual</th>
           <th scope="col">Next action</th>
           <th scope="col">Verification</th>
         </tr>
       </thead>
       <tbody>
-        <tr tabindex="0" data-state="done">
+        <tr tabindex="0" data-state="done" data-estimate-min="45" data-actual-min="38">
           <td data-label="Slice">Inventory existing skills</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Updated"><time datetime="2026-06-30T13:05:00-04:00">2026-06-30 13:05 ET</time></td>
+          <td data-label="Estimate">45m</td>
+          <td data-label="Actual">38m</td>
           <td data-label="Next action">None.</td>
           <td data-label="Verification">List saved in <code>catalog/tools</code>.</td>
         </tr>
-        <tr tabindex="0" data-state="done">
+        <tr tabindex="0" data-state="done" data-estimate-min="60" data-actual-min="72">
           <td data-label="Slice">Create standalone repo</td>
           <td data-label="State"><span class="state done">done</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Updated"><time datetime="2026-06-30T13:42:00-04:00">2026-06-30 13:42 ET</time></td>
+          <td data-label="Estimate">60m</td>
+          <td data-label="Actual">72m</td>
           <td data-label="Next action">Push remote.</td>
           <td data-label="Verification">README, ledger template, and verifier present.</td>
         </tr>
-        <tr tabindex="0" data-state="queued">
+        <tr tabindex="0" data-state="queued" data-estimate-min="25">
           <td data-label="Slice">Docs refresh</td>
           <td data-label="State"><span class="state queued">queued</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Updated"><time datetime="2026-06-30T12:50:00-04:00">2026-06-30 12:50 ET</time></td>
+          <td data-label="Estimate">25m</td>
+          <td data-label="Actual">-</td>
           <td data-label="Next action">Update install instructions after the template is approved.</td>
           <td data-label="Verification">Not started.</td>
         </tr>
-        <tr tabindex="0" data-state="active">
+        <tr tabindex="0" data-state="active" data-estimate-min="40">
           <td data-label="Slice">Catalog wiring</td>
           <td data-label="State"><span class="state active">active</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Updated"><time datetime="2026-06-30T14:15:00-04:00">2026-06-30 14:15 ET</time></td>
+          <td data-label="Estimate">40m</td>
+          <td data-label="Actual">-</td>
           <td data-label="Next action">Add JSON entry and run manager validation.</td>
           <td data-label="Verification">Pending <code>./bin/orca tools</code>.</td>
         </tr>
-        <tr tabindex="0" data-state="waiting">
+        <tr tabindex="0" data-state="waiting" data-estimate-min="15">
           <td data-label="Slice">User review</td>
           <td data-label="State"><span class="state waiting">waiting</span></td>
           <td data-label="Owner">user</td>
           <td data-label="Updated"><time datetime="2026-06-30T14:00:00-04:00">2026-06-30 14:00 ET</time></td>
+          <td data-label="Estimate">15m</td>
+          <td data-label="Actual">-</td>
           <td data-label="Next action">Choose preferred template direction.</td>
           <td data-label="Verification">Feedback captured in issue tracker.</td>
         </tr>
-        <tr tabindex="0" data-state="blocked">
+        <tr tabindex="0" data-state="blocked" data-estimate-min="30">
           <td data-label="Slice">Publish release</td>
           <td data-label="State"><span class="state blocked">blocked</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Updated"><time datetime="2026-06-30T14:12:00-04:00">2026-06-30 14:12 ET</time></td>
+          <td data-label="Estimate">30m</td>
+          <td data-label="Actual">-</td>
           <td data-label="Next action">Wait for repo creation permission if GitHub rejects create.</td>
           <td data-label="Verification">Remote URL reachable.</td>
         </tr>
-        <tr tabindex="0" data-state="verifying">
+        <tr tabindex="0" data-state="verifying" data-estimate-min="20">
           <td data-label="Slice">Template proof</td>
           <td data-label="State"><span class="state verifying">verifying</span></td>
           <td data-label="Owner">agent</td>
           <td data-label="Updated"><time datetime="2026-06-30T14:20:00-04:00">2026-06-30 14:20 ET</time></td>
+          <td data-label="Estimate">20m</td>
+          <td data-label="Actual">-</td>
           <td data-label="Next action">Run the verifier and inspect the generated page.</td>
           <td data-label="Verification">Pending browser check.</td>
         </tr>
       </tbody>
+    </table>
+
+    <h2 class="table-title">Estimate Learning Log</h2>
+    <table aria-label="Estimate learning log">
+      <thead>
+        <tr>
+          <th scope="col">Completed slice</th>
+          <th scope="col">Estimated</th>
+          <th scope="col">Actual</th>
+          <th scope="col">Accuracy</th>
+        </tr>
+      </thead>
+      <tbody data-estimate-log></tbody>
     </table>
   </main>
   <script>
@@ -511,6 +580,54 @@
       const copyButton = document.querySelector("[data-copy-summary]");
       const copyState = document.querySelector("[data-copy-state]");
       const jumpNext = document.querySelector("[data-jump-next]");
+      const timeRemaining = document.querySelector("[data-time-remaining]");
+      const timeOriginal = document.querySelector("[data-time-original]");
+      const timeMultiplier = document.querySelector("[data-time-multiplier]");
+      const timeSample = document.querySelector("[data-time-sample]");
+      const estimateLog = document.querySelector("[data-estimate-log]");
+      const minutes = (value) => Number.parseFloat(value || "0") || 0;
+      const escapeHtml = (value) => value.replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+      const formatDuration = (mins) => {
+        const rounded = Math.round(mins);
+        if (rounded < 60) return `${rounded}m`;
+        const hours = Math.floor(rounded / 60);
+        const rest = rounded % 60;
+        return rest ? `${hours}h ${rest}m` : `${hours}h`;
+      };
+      const estimateRows = () => rows.map((row) => ({
+        row,
+        name: row.querySelector("td")?.innerText.trim() || "Untitled",
+        state: row.dataset.state,
+        estimate: minutes(row.dataset.estimateMin),
+        actual: minutes(row.dataset.actualMin)
+      }));
+      const updateEstimates = () => {
+        const items = estimateRows();
+        const completed = items.filter((item) => item.estimate > 0 && item.actual > 0);
+        const multiplier = completed.length
+          ? completed.reduce((sum, item) => sum + item.actual / item.estimate, 0) / completed.length
+          : 1;
+        const open = items.filter((item) => item.state !== "done" && item.state !== "blocked");
+        const originalOpen = open.reduce((sum, item) => sum + item.estimate, 0);
+        const learnedOpen = originalOpen * multiplier;
+        const blocked = items.filter((item) => item.state === "blocked" && item.estimate > 0);
+
+        timeRemaining.textContent = `${formatDuration(learnedOpen)}${blocked.length ? " + blocked" : ""}`;
+        timeOriginal.textContent = formatDuration(originalOpen);
+        timeMultiplier.textContent = `${multiplier.toFixed(2)}x`;
+        timeSample.textContent = `${completed.length} finished`;
+        estimateLog.innerHTML = completed.map((item) => {
+          const ratio = item.actual / item.estimate;
+          const label = ratio <= 1 ? "under" : "over";
+          return `<tr><td>${escapeHtml(item.name)}</td><td>${formatDuration(item.estimate)}</td><td>${formatDuration(item.actual)}</td><td>${ratio.toFixed(2)}x ${label}</td></tr>`;
+        }).join("") || `<tr><td colspan="4">No completed estimates yet. Add <code>data-estimate-min</code> when a slice starts and <code>data-actual-min</code> when it finishes.</td></tr>`;
+      };
       const copyText = async (text) => {
         if (navigator.clipboard) {
           try {
@@ -552,12 +669,14 @@
         const visible = rows.filter((row) => !row.classList.contains("is-muted"));
         const text = visible.map((row) => {
           const cells = [...row.querySelectorAll("td")].map((cell) => cell.innerText.trim().replace(/\s+/g, " "));
-          return `${cells[0]}: ${cells[1]} | updated: ${cells[3]} | next: ${cells[4]} | verification: ${cells[5]}`;
+          return `${cells[0]}: ${cells[1]} | updated: ${cells[3]} | estimate: ${cells[4]} | actual: ${cells[5]} | next: ${cells[6]} | verification: ${cells[7]}`;
         }).join("\n");
         await copyText(text);
         copyState.textContent = "Copied";
         setTimeout(() => { copyState.textContent = ""; }, 1800);
       });
+
+      updateEstimates();
     })();
   </script>
 </body>

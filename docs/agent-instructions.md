@@ -14,6 +14,8 @@ Update the file directly when:
 
 - A plan, slice, chunk, phase, or milestone is created.
 - A slice changes state: queued, active, waiting, blocked, verifying, done.
+- A slice starts: add or update its `data-estimate-min` and visible Estimate cell.
+- A slice finishes: add `data-actual-min`, update the visible Actual cell, and leave the original estimate intact.
 - You finish a meaningful batch of work.
 - You discover a blocker or resolve one.
 - You change the scope, order, owner, or verification path.
@@ -53,6 +55,31 @@ Every `progress.html` should show:
 - blocker or wait reason when present
 - verification evidence or next verification step
 - last-updated timestamp
+- estimate and actual duration fields when timing is useful
+
+## Time Estimates
+
+Use minutes. When a slice starts, estimate the remaining work and record it in both places:
+
+```html
+<tr data-state="active" data-estimate-min="45">
+  ...
+  <td data-label="Estimate">45m</td>
+  <td data-label="Actual">-</td>
+</tr>
+```
+
+When the slice finishes, keep the estimate and add the actual:
+
+```html
+<tr data-state="done" data-estimate-min="45" data-actual-min="62">
+  ...
+  <td data-label="Estimate">45m</td>
+  <td data-label="Actual">62m</td>
+</tr>
+```
+
+The page uses completed estimate/actual pairs to calculate a learned multiplier and a better remaining-time estimate. Do not erase wrong estimates; bad estimates are how the page learns.
 
 ## Editing Guidance
 

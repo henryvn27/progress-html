@@ -15,7 +15,11 @@ REQUIRED_TEXT = [
   "Slice",
   "State",
   "Updated",
-  "Verification"
+  "Verification",
+  "Time remaining",
+  "Estimate Learning Log",
+  "data-estimate-min",
+  "data-actual-min"
 ].freeze
 
 abort "expected 1 template, found #{TEMPLATES.length}" unless TEMPLATES.length == 1

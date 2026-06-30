@@ -8,7 +8,7 @@ This repo contains one static `progress.html` ledger template plus an instructio
 ruby scripts/verify.rb
 ```
 
-The verifier checks that the template is standalone, includes slice/chunk status content, avoids external assets, and includes accessible non-color status labels.
+The verifier checks that the template is standalone, includes slice/chunk status content, avoids external assets, includes accessible non-color status labels, and keeps the estimate/actual timing fields needed for the learning log.
 
 `docs/integrations.md` and `examples/` show how existing tools wire to `progress.html` without hooks, watchers, or wrappers.
 

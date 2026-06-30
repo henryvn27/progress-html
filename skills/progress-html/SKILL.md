@@ -11,6 +11,7 @@ Use this skill when the user wants a visible `progress.html` tracker, or when a 
 5. Before final response, make sure the file is current.
 6. Mention the path or offer to open it when useful.
 7. Keep timestamps current for changed slices or chunks.
+8. Keep `data-estimate-min` when work starts and `data-actual-min` when work finishes so the page learns time estimates.
 
 ## State Language
 
@@ -36,6 +37,12 @@ Use `progress-ledger.html`.
 - No generated assets.
 - No external web dependencies.
 - No redesign during routine updates.
+
+## Time Estimates
+
+When a slice starts, add the best current minute estimate to `data-estimate-min` and the visible Estimate cell.
+
+When it finishes, keep that estimate and add `data-actual-min` plus the visible Actual cell. Do not erase inaccurate estimates; the comparison is the learning signal.
 
 ## Integration Rule
 

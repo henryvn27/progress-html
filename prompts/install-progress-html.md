@@ -25,12 +25,14 @@ Process:
    - Rewrite example content so it describes that repo's real current state.
    - Keep a clear `Do next` block near the top.
    - Keep the accessible progress bar.
+   - Keep the time remaining panel and estimate learning log.
    - Keep text state labels: queued, active, waiting, blocked, verifying, done.
+   - Record `data-estimate-min` when a slice starts and `data-actual-min` when it finishes.
    - Add or update a short agent instruction in the repo README or skill docs:
      `If progress.html exists, update it after meaningful lifecycle changes and before final response. Do not install hooks or watchers.`
 4. For repos that already have `progress.html`:
    - Do not replace it.
-   - Ensure it has current goal, Do next, progress bar, latest update, slice/chunk list, state labels, and verification evidence.
+   - Ensure it has current goal, Do next, progress bar, time remaining, latest update, slice/chunk list, state labels, estimates, actual durations when done, and verification evidence.
 5. Update the manager/catalog repo documentation so future tool repos are expected to include root `progress.html` and the lifecycle update rule.
 6. Run the smallest available verifier for each changed repo. If no verifier exists, at least run a file/syntax check that matches the repo.
 7. Commit each repo separately with a scoped message.
@@ -43,5 +45,5 @@ Process:
    - path to each installed `progress.html`
 
 Install rule for future repos:
-When creating or extracting a new standalone tool repo, create root `progress.html` during repo setup. It should show the current goal, Do next, progress bar, latest update, all slices/chunks, state labels, owner, next action, and verification evidence. Agents must update it directly at lifecycle checkpoints. No hooks, watchers, daemons, or wrappers.
+When creating or extracting a new standalone tool repo, create root `progress.html` during repo setup. It should show the current goal, Do next, progress bar, time remaining, latest update, all slices/chunks, state labels, owner, next action, estimates, actual durations when done, and verification evidence. Agents must update it directly at lifecycle checkpoints. No hooks, watchers, daemons, or wrappers.
 ```
